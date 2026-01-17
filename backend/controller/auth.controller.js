@@ -63,10 +63,78 @@ export const login = async (req, res) => {
     }
   }
 // ============ LOGOUT ============ //
-export const logout = async (req, res) => {}
+export const logout = async (req, res) => {
+   const token = req.cookies.refreshTokens;
+
+   try {
+     if(token){
+       await User.updateOne({
+          refreshTokens: { token },
+          $pull: { refreshTokens: token }
+       });
+     }
+    //  clear cookies
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.json({ message: "Logged out successfully" });
+   } catch (error) {
+    res.json({ message: "Server error" });
+    console.log(error);
+   }
+}
 
 // ============ REFRESH TOKEN ============ //
-export const refreshToken = async (req, res) => {}
+export const refreshToken = async (req, res) => {
+  const token = req.cookies.refreshTokens;
+  try {
+    if(!token) return res.sendStatus(401); //unauthorized
+
+    const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET); 
+    const user = await User.findById(decoded.id);
+
+    if(!user || !user.refreshTokens.includes(token))
+      return res.sendStatus(403);
+
+    //rotate tokens
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+
+    user.refreshTokens = [newRefreshToken];
+    await user.save();
+
+    res.cookie("accessToken", newAccessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("refreshToken", newRefreshToken, {
+      ...cookieOptions,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(403);
+  }
+}
 
 // ============ GET CURRENT USER ============ //
-export const getCurrentUser = async (req, res) => {}
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId)
+      .select("-password -refreshTokens");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("GET CURRENT USER ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

@@ -1,6 +1,6 @@
-import { User } from "../models/user.model.js";
 
-
+import express from "express";
+import { protectedRoute } from "../middleware/auth.middleware.js";
 import {
     register,
     login,
@@ -8,7 +8,6 @@ import {
     refreshToken,
     getCurrentUser,
 } from "../controller/auth.controller.js";
-import express from "express";
 
 const router = express.Router();
 
@@ -17,7 +16,7 @@ router.post("/logout", logout);
 router.post("/register", register);
 
 router.post("/refresh-token", refreshToken);
-router.get("/getCurrentUser", getCurrentUser);
+router.get("/getCurrentUser", protectedRoute, getCurrentUser);
 
 
 
