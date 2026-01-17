@@ -133,6 +133,8 @@ export const getCurrentUser = async (req, res) => {
         role: user.role,
       },
     });
+    
+
   } catch (error) {
     console.error("GET CURRENT USER ERROR:", error);
     res.status(500).json({ message: "Server error" });
