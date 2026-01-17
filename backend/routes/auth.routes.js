@@ -18,6 +18,4 @@ router.post("/register", register);
 router.post("/refresh-token", refreshToken);
 router.get("/getCurrentUser", protectedRoute, getCurrentUser);
 
-
-
 export default router;

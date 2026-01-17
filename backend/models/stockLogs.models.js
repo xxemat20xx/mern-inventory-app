@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const stockLogSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
