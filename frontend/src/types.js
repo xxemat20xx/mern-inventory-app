@@ -3,6 +3,6 @@ export const ViewState = {
   INVENTORY: "inventory",
   TERMINAL: "terminal",
   ANALYTICS: "analytics",
-  STOCKLOGS: "stocklogs",
-  SALESLOGS: "saleslogs",
+  STOCK_LOGS: "stocklogs",
+  SALE_LOGS: "saleslogs",
  };

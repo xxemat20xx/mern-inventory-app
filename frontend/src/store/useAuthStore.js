@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ViewState } from '../constants/viewStates';
+import { ViewState } from '../types';
 import api from '../api/api';
 
 
