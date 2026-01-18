@@ -16,6 +16,6 @@ router.post("/logout", logout);
 router.post("/register", register);
 
 router.post("/refresh-token", refreshToken);
-router.get("/getCurrentUser", protectedRoute, getCurrentUser);
+router.get("/checkAuth", protectedRoute, getCurrentUser);
 
 export default router;
