@@ -4,6 +4,8 @@ const saleSchema = new mongoose.Schema({
     receiptNo: {
         type: String,
         unique: true,
+        required: true,
+        index: true
     },
     items: [{
         productId: {

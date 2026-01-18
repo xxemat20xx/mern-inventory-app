@@ -16,7 +16,8 @@ const stockLogSchema = new mongoose.Schema({
   },
 
   note:{
-    type: String
+    type: String, 
+    default: ''
   },
   performedBy: {
     type: mongoose.Schema.Types.ObjectId,
