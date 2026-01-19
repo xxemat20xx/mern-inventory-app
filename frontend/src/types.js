@@ -1,5 +1,5 @@
 export const ViewState = {
-  DASHBOARD: "dashboard",
+  DASHBOARD: "dashboard", 
   INVENTORY: "inventory",
   TERMINAL: "terminal",
   ANALYTICS: "analytics",

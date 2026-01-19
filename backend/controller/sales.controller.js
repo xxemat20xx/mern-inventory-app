@@ -69,3 +69,27 @@ export const createSale = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+export const getStats = async ( req, res ) => {
+  try {
+    const sales = await Sale.find({ status: "completed" });
+
+    let totalRevenue = 0;
+    let totalSoldItem = 0;
+
+    for(const sale of sales){
+       totalRevenue += sale.totalAmount;
+
+       for(const item of sale.items){
+        totalSoldItem += item.quantity;
+       }
+    }
+    const totalProfit = totalRevenue * 0.3 // example 30%
+    res.json({
+      totalRevenue,
+       totalSoldItem,
+       totalProfit
+    })
+  } catch (error) {
+    res.status(500).json({ message: "Failed to load stats" });
+  }
+}

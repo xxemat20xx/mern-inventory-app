@@ -5,10 +5,12 @@ import {
   LayoutDashboard,
   Package,
   ShoppingCart,
-  CheckSquare,
+  FileBox,
   BarChart3,
+  TrendingUp,
   X,
-  LogOut
+  LogOut,
+  Menu
 } from "lucide-react";
 
 
@@ -52,9 +54,6 @@ const Layout = ({ children }) => {
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-center h-16 border-b border-slate-200 px-6">
             <div className="flex items-center space-x-2 text-primary-600 font-bold text-xl">
-               <div className="w-8 h-8 bg-primary-600 text-white rounded-lg flex items-center justify-center">
-                Inventory
-               </div>
                <span>Inventory App</span>
             </div>
             <button 
@@ -73,19 +72,36 @@ const Layout = ({ children }) => {
               active={currentView === ViewState.DASHBOARD}
               onClick={() => setCurrentView(ViewState.DASHBOARD)}
              />
-             
+              <SidebarItem
+              icon={<Package size={16} />}
+              label="Inventory"
+              active={currentView === ViewState.INVENTORY}
+              onClick={() => setCurrentView(ViewState.INVENTORY)}
+             />
+             <SidebarItem
+              icon={<ShoppingCart size={16} />}
+              label="Terminal"
+              active={currentView === ViewState.TERMINAL}
+              onClick={() => setCurrentView(ViewState.TERMINAL)}
+              />
              <SidebarItem
               icon={<BarChart3 size={16} />}
-              label="Stock Logs"
-              active={currentView === ViewState.STOCKLOGS}
-              onClick={() => setCurrentView(ViewState.STOCK_LOGS)}
+              label="Analytics"
+              active={currentView === ViewState.ANALYTICS}
+              onClick={() => setCurrentView(ViewState.ANALYTICS)}
              />
               <SidebarItem
-              icon={<ShoppingCart size={16} />}
+              icon={<TrendingUp size={16} />}
               label="Sales Logs"
               active={currentView === ViewState.SALE_LOGS}
               onClick={() => setCurrentView(ViewState.SALE_LOGS)}
-              />
+             />
+              <SidebarItem
+              icon={<FileBox size={16} />}
+              label="Stock Logs"
+              active={currentView === ViewState.STOCK_LOGS}
+              onClick={() => setCurrentView(ViewState.STOCK_LOGS)}
+             />
           
           </nav>
 
@@ -111,7 +127,7 @@ const Layout = ({ children }) => {
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200">
-          <div className="flex items-center font-bold text-slate-900">HR App</div>
+          <div className="flex items-center font-bold text-slate-900">Inventory App</div>
           <button onClick={() => setIsSidebarOpen(true)} className="p-2 text-slate-600">
             <Menu size={24} />
           </button>
