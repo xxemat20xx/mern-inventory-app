@@ -149,10 +149,8 @@ const Layout = ({ children, isDarkMode, toggleTheme }) => {
                     </div>
                     <button
                       onClick={toggleTheme}
-                      className="p-2 rounded-lg
-                      hover:bg-slate-100
-                      text-slate-700 cursor-pointer"
-                        style={{backgroundColor: 'var(--text)', color: 'var(--bg)'}}
+                      className="p-2 rounded-lg"
+                      style={{color: 'var(--text)'}}
                     >
                       {isDarkMode ? <Sun /> : <Moon />}
                     </button>

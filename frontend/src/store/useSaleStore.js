@@ -10,6 +10,8 @@ export const useSaleStore = create((set) => ({
   },
   isLoading: false,
   error: null,
+  lastSale: null,
+
 
   // ===== ACTIONS =====
   fetchDashboardStats: async () => {
@@ -29,7 +31,22 @@ export const useSaleStore = create((set) => ({
       });
     }
   },
+  createSale: async (saleData) =>{
+    set({ isLoading: true, error: null });
+    try {
+      const res = await api.post("/sales/createSale", saleData);
 
+      set({
+        lastSale: res.data,
+        isLoading: false,
+      });
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || "Failed to create sale",
+        isLoading: false,
+      });
+    }
+  },
   resetStats: () =>
     set({
       stats: {

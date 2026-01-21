@@ -27,7 +27,7 @@ const Dashboard = () => {
     error,
     fetchDashboardStats
   } = useSaleStore();
-  console.log(stats)
+
   useEffect(() => {
     fetchDashboardStats();
   }, [fetchDashboardStats]);

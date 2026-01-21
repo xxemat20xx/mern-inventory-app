@@ -93,3 +93,11 @@ export const getStats = async ( req, res ) => {
     res.status(500).json({ message: "Failed to load stats" });
   }
 }
+export const getSales = async (req, res) => {
+  try {
+    const sales = await Sale.find().populate("cashierId", "name");
+    res.json(sales);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to load sales" });
+  }
+}
