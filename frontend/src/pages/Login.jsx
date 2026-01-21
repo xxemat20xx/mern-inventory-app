@@ -1,60 +1,106 @@
-import { useState} from "react"
-import { useAuthStore } from "../store/useAuthStore"
-import { useNavigate } from "react-router-dom";
+import React, { useState} from 'react';
+import {
+  Package,
+  ShieldCheck,
+  User as UserIcon,
+  Sun,
+  Moon,
+  ArrowRight,
+} from 'lucide-react';
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("123456");
-  const { login } = useAuthStore();
-  const navigate = useNavigate();
-  const handleSubmit = async (e) => {
+import { useAuthStore } from '../store/useAuthStore';
+
+const Login = ({ isDarkMode, toggleTheme }) => {
+
+  const { login} = useAuthStore();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async(e) => {
     e.preventDefault();
-      await login(email, password);
-      navigate("/dashboard");
-  }
-  
+    await login(email, password)
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-slate-200">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Inventory App</h1>
-          <p className="text-slate-500 mt-2">Operations & POS Management</p>
+    
+    <div className="min-h-screen flex items-center justify-center
+    " style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}>
+  
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-3xl shadow-xl p-8" style={{ backgroundColor: 'var(--card)', color: 'var(--text)' }}>
+          <div className="flex justify-between items-start mb-10">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 dark:shadow-none">
+                <Package className="text-white" size={28} />
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900" style={{color: 'var(--text)'}}>Inventory App</h1>
+            </div>
+
+            <button
+              onClick={toggleTheme}
+              className={`${isDarkMode ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-800'} p-2 rounded-xl hover:bg-opacity-80 transition-colors}`}
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-2 text-slate-50" style={{color:' var(--text)'}}>Welcome Back</h2>
+            <p className="text-slate-500 dark:text-slate-500 text-sm">
+              Sign in to manage your inventory and sales.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder='Enter your email'
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-slate-5 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  style={{backgroundColor: 'var(--bg)', color: 'var(--text)'}}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name='password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete=''
+                  required
+                  placeholder='**********'
+                  className="w-full px-4 py-3 rounded-xl bg-slate-5 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  style={{backgroundColor: 'var(--bg)', color: 'var(--text)'}}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01] active:scale-[0.99]"
+            >
+              Sign In <ArrowRight size={20} />
+            </button>
+          </form>
+
+          <p className="mt-8 text-center text-xs text-slate-400 uppercase tracking-widest font-semibold">
+            Demo Account Access
+          </p>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
-              placeholder="you@company.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
-            <input
-              type="password"
-              defaultValue="password"
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
-              placeholder="••••••••"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-black text-white py-2.5 w-full rounded-2xl hover:bg-slate-900 transition-colors shadow-sm cursor-pointer"
-          >
-            Sign In
-          </button>
-        </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

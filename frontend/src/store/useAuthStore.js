@@ -10,7 +10,7 @@ export const useAuthStore = create((set) => ({
     isLoading: false,
     error: null,
 
-    //DASHBOARD NAVIGATION STATE
+    // //DASHBOARD NAVIGATION STATE
     currentView: ViewState.DASHBOARD,
     setCurrentView: (view) => set({ currentView: view }),
 
