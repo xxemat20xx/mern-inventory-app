@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { ViewState } from '../types';
 import api from '../api/api';
 
 
@@ -9,10 +8,6 @@ export const useAuthStore = create((set) => ({
     isCheckingAuth: true,
     isLoading: false,
     error: null,
-
-    // //DASHBOARD NAVIGATION STATE
-    currentView: ViewState.DASHBOARD,
-    setCurrentView: (view) => set({ currentView: view }),
 
     login: async (email, password) => {
         set({ isLoading: true, error: null });
@@ -44,5 +39,3 @@ export const useAuthStore = create((set) => ({
     }
 }));
 
-
-export default useAuthStore;
