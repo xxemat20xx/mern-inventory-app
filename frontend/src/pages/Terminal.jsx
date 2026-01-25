@@ -52,10 +52,15 @@ const Terminal = () => {
       }
       return [...prev, {product, quantity: 1}]
     })
-    console.log("Current Cart Items: ", cart)
+    console.log(cart)
   }
-  const updateQty = (productId, delta) => {}
-  const removeFromCart = (productId) => {}
+  
+  const updateQty = (productId, delta) => {
+    console.log(productId, delta)
+  }
+  const removeFromCart = (productId) => {
+    setCart(prev => prev.filter(item => item.product._id !== productId));
+  };
   const handleCheckOut = async () => {}
   const printReceipt = () => {}
   const handleBarcodeSubmit = () => {}
@@ -95,7 +100,7 @@ const Terminal = () => {
                       return(
                         <button
                         key={product._id}
-                        disabled={product.quantity}
+                        disabled={product.quantity <= 0}
                         onClick={() => addToCart(product)}
                         className={`group text-left p-4 rounded-2xl border transition-all ${
                           product.quantity <= 0 
@@ -140,7 +145,58 @@ const Terminal = () => {
            <h3 className='text-bold text-xl text-slate-50'>Current Order</h3>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          
+             {cart.map((item) => (
+              <div key={item.product?._id} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                  <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm truncate text-slate-50">{item.product?.name}</h4>
+                      <p className="text-xs text-slate-500 mb-2">₱{item?.product?.price.toFixed(2)} each</p>
+
+                      <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => updateQty(item.product?._id, -1)}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <button 
+                            onClick={() => updateQty(item.product?._id, 1)}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
+                          >
+                            <Plus size={14} />
+                          </button>
+                      </div>
+                  </div>
+                  <div className="text-right">
+                      <button 
+                        onClick={() => removeFromCart(item.product?._id)}
+                        className="p-1.5 text-slate-400 hover:text-rose-500 transition-colors"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                  </div>
+              </div>
+             ))}
+             {cart.length === 0 && (
+              <div className="h-full flex flex-col items-center justify-center py-20 text-slate-400">
+                   <ShoppingCart size={48} className="mb-4 opacity-10" />
+                   <p className="text-sm font-medium">Cart is empty</p>
+              </div>
+             )}
+        </div>
+        {/* ------------------ subtotal ------------------- */}
+        <div className="p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 space-y-2">
+             <div className="flex justify-between text-sm text-slate-500">
+                <span>Subtotal</span>
+                <span>₱{subtotal.toFixed(2)}</span>
+             </div>
+              <div className="flex justify-between text-sm text-slate-500">
+                <span>Tax (10%)</span>
+                <span>₱{tax.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-xl font-bold pt-2">
+                <span className='text-slate-50'>Total</span>
+                <span className="text-indigo-600 dark:text-indigo-400">${total.toFixed(2)}</span>
+              </div>
         </div>
       </div>
     </div>
