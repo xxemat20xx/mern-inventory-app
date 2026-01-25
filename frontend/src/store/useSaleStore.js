@@ -2,6 +2,7 @@ import { create } from "zustand";
 import api from "../api/api";
 
 export const useSaleStore = create((set) => ({
+  sales:[],
   // ===== STATE =====
   stats: {
     totalRevenue: 0,
@@ -53,7 +54,20 @@ checkoutSale: async ({ cart, paymentMethod = "cash" }) => {
     throw err;
   }
 },
+fetchPurchaseLogs: async () => {
+  set({isLoading: true, error: null});
+  try {
+     const res = await api.get("/sales/salesLogs");
+      set({ sales: res.data, isLoading: false });
+  } catch (error) {
+      set({
+      error: err.response?.data?.message || "Checkout failed",
+      isLoading: false
+    });
+    throw err;
+  }
 
+},
   resetStats: () =>
     set({
       stats: {
