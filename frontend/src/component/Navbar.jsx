@@ -126,12 +126,14 @@ const Navbar = ({ children }) => {
       {/* ---------------- MAIN ---------------- */}
       <main className="flex-1 flex flex-col">
         <header className="h-16 flex items-center justify-between px-6 border-b bg-white dark:bg-slate-900">
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="hidden md:block">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="hidden md:block">
             <Menu size={22} className="text-slate-50"/>
           </button>
 
           <h1 className="capitalize font-semibold text-slate-300">{activeTab}</h1>
-
+          </div>
+          
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
               <p className="text-sm text-slate-50">{user.email}</p>

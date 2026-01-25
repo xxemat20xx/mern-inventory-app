@@ -12,18 +12,12 @@ export const useSaleStore = create((set) => ({
   error: null,
   lastSale: null,
 
-
   // ===== ACTIONS =====
   fetchDashboardStats: async () => {
     set({ isLoading: true, error: null });
-
     try {
       const res = await api.get("/sales/stats");
-
-      set({
-        stats: res.data,
-        isLoading: false
-      });
+      set({ stats: res.data, isLoading: false });
     } catch (err) {
       set({
         error: err.response?.data?.message || "Failed to load stats",
@@ -31,22 +25,35 @@ export const useSaleStore = create((set) => ({
       });
     }
   },
-  createSale: async (saleData) =>{
-    set({ isLoading: true, error: null });
-    try {
-      const res = await api.post("/sales/createSale", saleData);
+checkoutSale: async ({ cart, paymentMethod = "cash" }) => {
+  set({ isLoading: true, error: null });
 
-      set({
-        lastSale: res.data,
-        isLoading: false,
-      });
-    } catch (err) {
-      set({
-        error: err.response?.data?.message || "Failed to create sale",
-        isLoading: false,
-      });
-    }
-  },
+  const payload = {
+    items: cart.map(item => ({
+      productId: item.product._id,
+      quantity: item.quantity
+    })),
+    paymentMethod
+  };
+
+  try {
+    const res = await api.post("/sales/createSale", payload);
+
+    set({
+      lastSale: res.data,
+      isLoading: false
+    });
+
+    return res.data; // 👈 THIS is the key line
+  } catch (err) {
+    set({
+      error: err.response?.data?.message || "Checkout failed",
+      isLoading: false
+    });
+    throw err;
+  }
+},
+
   resetStats: () =>
     set({
       stats: {

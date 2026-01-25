@@ -13,7 +13,7 @@ import { useInventoryStore } from '../store/useInventoryStore';
 import { useEffect, useState } from 'react';
 
 const Inventory = () => {
-  const { products, getProducts, deleteProduct } = useInventoryStore();
+  const { products, getProducts, deleteProduct, createProduct, updateProduct } = useInventoryStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -24,7 +24,7 @@ const Inventory = () => {
      description:'',
      cost: 0,
      quantity: 0,
-     lowStockAlert: 5,
+     lowStockAlert: 0,
      barcode:'',
      category:''
   });
@@ -33,37 +33,64 @@ const Inventory = () => {
     getProducts();
   }, [getProducts]);
 
-  const openModal = () => {
+const openModal = (product = null) => {
+  if (product) {
+    setIsEditing(product._id);   // IMPORTANT
+    setFormData({
+      name: product.name,
+      sku: product.sku,
+      price: product.price,
+      description: product.description || '',
+      cost: product.cost,
+      quantity: product.quantity,
+      lowStockAlert: product.lowStockAlert,
+      barcode: product.barcode || '',
+      category: product.category,
+    });
+  } else {
     setIsEditing(null);
     setFormData({
-     name: '',
-     sku: '',
-     price: 0,
-     description:'',
-     cost: 0,
-     quantity: 0,
-     lowStockAlert: 5,
-     barcode:'',
-     category:''
+      name: '',
+      sku: '',
+      price: 0,
+      description:'',
+      cost: 0,
+      quantity: 0,
+      lowStockAlert: 5,
+      barcode:'',
+      category:''
     });
-    setIsModalOpen(true);
   }
+
+  setIsModalOpen(true);
+};
+
   const handleDelete = async(id) => {
     if(confirm("Are you sure u want to delete this product?")){
       await deleteProduct(id);
       getProducts();
     }
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submitted");
+      if(isEditing){
+        await updateProduct(isEditing, formData);
+       }else{
+        await createProduct(formData);
+       }
+       setIsModalOpen(false);
+       getProducts();
   }
-  const filteredProduct = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
-    p.sku.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
-    p.category.toLowerCase().includes(searchTerm.toLocaleLowerCase()) 
-  );
-  console.log(filteredProduct);
+  const filteredProduct = products.filter(p => {
+    const term = searchTerm.toLowerCase();
+
+    return (
+      p.name?.toLowerCase().includes(term) ||
+      p.sku?.toLowerCase().includes(term) ||
+      p.category?.toLowerCase().includes(term)
+    );
+  });
+
   return (
      <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header */}
@@ -105,10 +132,10 @@ const Inventory = () => {
                 <th className="px-6 py-4 text-right text-xs font-bold uppercase">Action</th>
               </tr>
             </thead>
-            <tbody>
-<tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredProduct.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr key={p._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                  
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
@@ -124,19 +151,19 @@ const Inventory = () => {
                     <span className="text-sm text-slate-600 dark:text-slate-400">{p.category}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-bold">{p.stock}</div>
-                    <div className="text-[10px] text-slate-400">Min: {p.minStock}</div>
+                    <div className="text-sm font-bold">{p.quantity}</div>
+                    <div className="text-[10px] text-slate-400">Min: {p.lowStockAlert}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-slate-500 font-medium">Cost: ${p.cost.toFixed(2)}</div>
                     <div className="text-sm font-bold text-indigo-600 dark:text-indigo-400">${p.price.toFixed(2)}</div>
                   </td>
                   <td className="px-6 py-4">
-                    {p.stock <= 0 ? (
+                    {p.quantity <= 0 ? (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 text-[10px] font-bold uppercase tracking-wider">
                         <AlertCircle size={10} /> Out of Stock
                       </span>
-                    ) : p.stock <= p.minStock ? (
+                    ) : p.quantity <= p.lowStockAlert ? (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 text-[10px] font-bold uppercase tracking-wider">
                         <AlertCircle size={10} /> Low Stock
                       </span>
@@ -155,7 +182,7 @@ const Inventory = () => {
                         <Edit3 size={18} />
                       </button>
                       <button 
-                        onClick={() => handleDelete(p.id)}
+                        onClick={() => handleDelete(p._id)}
                         className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
                       >
                         <Trash2 size={18} />
@@ -164,7 +191,6 @@ const Inventory = () => {
                   </td>
                 </tr>
               ))}
-            </tbody>
             </tbody>
            </table>
         </div>
@@ -247,22 +273,12 @@ const Inventory = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Init Stock</label>
-                      <input 
-                        required
-                        type="number" 
-                        value={formData.stock}
-                        onChange={(e) => setFormData({...formData, stock: parseInt(e.target.value)})}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-                    <div>
                       <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Min Alert</label>
                       <input 
                         required
                         type="number" 
-                        value={formData.minStock}
-                        onChange={(e) => setFormData({...formData, minStock: parseInt(e.target.value)})}
+                        value={formData.lowStockAlert}
+                        onChange={(e) => setFormData({...formData, lowStockAlert: parseInt(e.target.value)})}
                         className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
@@ -272,7 +288,7 @@ const Inventory = () => {
                         required
                         type="number" 
                         value={formData.quantity}
-                        onChange={(e) => setFormData({...formData, minStock: parseInt(e.target.value)})}
+                        onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value)})}
                         className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>

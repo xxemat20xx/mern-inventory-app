@@ -42,11 +42,11 @@ export const login = async (req, res) => {
 
       res.cookie("accessToken", accessToken, {
         ...cookieOptions,
-        maxAge: 15 * 60 * 1000,
+        maxAge:  1* 24 * 60 * 60 * 1000, //1d
       });
       res.cookie("refreshToken", refreshToken, {
         ...cookieOptions,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000, //7d
       });
 
       res.json({
