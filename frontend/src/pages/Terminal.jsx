@@ -26,13 +26,14 @@ const Terminal = () => {
   const[lastSale, setLastSale] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
   const barcodeInputRef = useRef(null);
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   useEffect(() => {
     getProducts();
     fetchPurchaseLogs();
   }, [getProducts, fetchPurchaseLogs]);
 
-
+  console.log(sales);
   const filteredProducts = products.filter((p) => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.sku.toLowerCase().includes(searchTerm.toLowerCase())
@@ -52,16 +53,38 @@ const Terminal = () => {
       }
       return [...prev, {product, quantity: 1}]
     })
-    console.log(cart)
+   
   }
-  
   const updateQty = (productId, delta) => {
-    console.log(productId, delta)
+    setCart(prev => prev.map((item) => {
+      if(item._id === productId){
+        const newQty = Math.max(1, item.quantity + delta);
+        const original = products.find(p => p._id === productId);
+        if (original && newQty > original.stock) return item;
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    }))
   }
   const removeFromCart = (productId) => {
     setCart(prev => prev.filter(item => item.product._id !== productId));
   };
-  const handleCheckOut = async () => {}
+  const handleCheckOut = async () => {
+    if(cart.length === 0) return;
+    setIsProcessing(true);
+    try {
+      const sale = await checkoutSale({cart, paymentMethod: "cash"});
+      await delay(1000); //delay 1 seconds
+
+      setLastSale(sale);
+      setCart([]);
+      setIsProcessing(false);
+      setShowReceipt(true);
+      getProducts(); 
+    } catch (error) {
+      throw error
+    }
+  }
   const printReceipt = () => {}
   const handleBarcodeSubmit = () => {}
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
@@ -153,13 +176,14 @@ const Terminal = () => {
 
                       <div className="flex items-center gap-2">
                           <button 
-                            onClick={() => updateQty(item.product?._id, -1)}
+                            onClick={() => updateQty(item.product.id, -1)}
                             className="w-7 h-7 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
                           >
                             <Minus size={14} />
                           </button>
+                          <span className='text-center font-bold text-sm mx-2 text-slate-50'>{item.quantity}</span>
                           <button 
-                            onClick={() => updateQty(item.product?._id, 1)}
+                            onClick={() => updateQty(item.product.id, 1)}
                             className="w-7 h-7 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
                           >
                             <Plus size={14} />
@@ -195,10 +219,56 @@ const Terminal = () => {
               </div>
               <div className="flex justify-between text-xl font-bold pt-2">
                 <span className='text-slate-50'>Total</span>
-                <span className="text-indigo-600 dark:text-indigo-400">${total.toFixed(2)}</span>
+                <span className="text-indigo-600 dark:text-indigo-400">₱{total.toFixed(2)}</span>
               </div>
+        {/* ------------------------ Checkout ------------------- */}
+          <button 
+            onClick={handleCheckOut}
+            disabled={cart.length === 0 || isProcessing}
+            className="w-full mt-4 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-200 dark:shadow-none"
+          >
+            {isProcessing ? (
+               <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <CreditCard size={20} />
+                Checkout (Cash Only)
+              </>
+            )}
+          </button>
         </div>
       </div>
+      {/* -------------- Receipt Modal --------------------- */}
+      {showReceipt && lastSale && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 no-print">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in duration-300">
+               <div className="p-6 text-center border-b border-slate-100 dark:border-slate-800">
+                   <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle2 size={32} />
+                    </div>
+                    <h3 className="text-xl font-bold">Sale Successful!</h3>
+                    <p className="text-sm text-slate-500">Transaction ID: {lastSale.receiptNo.toUpperCase()}</p>
+                </div>
+
+                <div className="p-6 space-y-4">
+                    <button 
+                    onClick={printReceipt}
+                    className="w-full py-3 bg-slate-900 dark:bg-slate-100 dark:text-slate-900 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all"
+                    >
+                      <Printer size={20} />
+                      Print Receipt                   
+                    </button>
+                    <button
+                      onClick={() => setShowReceipt(false)}
+                      className="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                    >
+                      Close
+                    </button>
+                </div>
+            </div>
+        </div>
+      )
+      }
     </div>
   )
 }

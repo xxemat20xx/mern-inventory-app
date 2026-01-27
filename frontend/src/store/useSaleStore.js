@@ -45,7 +45,7 @@ checkoutSale: async ({ cart, paymentMethod = "cash" }) => {
       isLoading: false
     });
 
-    return res.data; // 👈 THIS is the key line
+    return res.data;
   } catch (err) {
     set({
       error: err.response?.data?.message || "Checkout failed",
