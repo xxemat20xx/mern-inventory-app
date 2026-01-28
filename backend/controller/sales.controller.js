@@ -69,30 +69,48 @@ export const createSale = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-export const getStats = async ( req, res ) => {
+export const getStats = async (req, res) => {
   try {
     const sales = await Sale.find({ status: "completed" });
 
     let totalRevenue = 0;
     let totalSoldItem = 0;
 
-    for(const sale of sales){
-       totalRevenue += sale.totalAmount;
+    const dailyMap = {};
 
-       for(const item of sale.items){
+    for (const sale of sales) {
+      totalRevenue += sale.totalAmount;
+
+      const dateKey = sale.createdAt.toISOString().slice(0, 10);
+
+      dailyMap[dateKey] =
+        (dailyMap[dateKey] || 0) + sale.totalAmount;
+
+      for (const item of sale.items) {
         totalSoldItem += item.quantity;
-       }
+      }
     }
-    const totalProfit = totalRevenue * 0.3 // example 30%
+
+    const salesData = Object.entries(dailyMap).map(
+      ([date, amount]) => ({
+        date,
+        amount
+      })
+    );
+
+    const totalProfit = totalRevenue * 0.3; // example
+
     res.json({
       totalRevenue,
-       totalSoldItem,
-       totalProfit
-    })
+      totalSoldItem,
+      totalProfit,
+      salesData
+    });
   } catch (error) {
     res.status(500).json({ message: "Failed to load stats" });
   }
-}
+};
+
 export const getSales = async (req, res) => {
   try {
     const sales = await Sale.find().populate("cashierId", "name");

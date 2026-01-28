@@ -33,7 +33,7 @@ const Terminal = () => {
     fetchPurchaseLogs();
   }, [getProducts, fetchPurchaseLogs]);
 
-  console.log(sales);
+
   const filteredProducts = products.filter((p) => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.sku.toLowerCase().includes(searchTerm.toLowerCase())
@@ -85,7 +85,9 @@ const Terminal = () => {
       throw error
     }
   }
-  const printReceipt = () => {}
+  const printReceipt = () => {
+    window.print();
+  }
   const handleBarcodeSubmit = () => {}
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
   const tax = subtotal * 0.1; //10%
@@ -246,8 +248,8 @@ const Terminal = () => {
                    <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle2 size={32} />
                     </div>
-                    <h3 className="text-xl font-bold">Sale Successful!</h3>
-                    <p className="text-sm text-slate-500">Transaction ID: {lastSale.receiptNo.toUpperCase()}</p>
+                    <h3 className="text-xl font-bold text-slate-50">Sale Successful!</h3>
+                    <p className="text-sm text-slate-300">Transaction ID: {lastSale.receiptNo.toUpperCase()}</p>
                 </div>
 
                 <div className="p-6 space-y-4">
@@ -267,8 +269,52 @@ const Terminal = () => {
                 </div>
             </div>
         </div>
-      )
-      }
+      )}
+      {/* ------------- Printable Receipt Component ------------ */}
+      {lastSale && (
+        <div className="print-only hidden font-mono text-[10pt] w-[80mm] mx-auto p-4 border border-dashed border-slate-300">
+            <div className="text-center mb-6">
+              <h1 className="text-xl font-bold">INVENTORY APP</h1>
+              <p>123 Digital Ave, Planet Namik</p>
+              <p>TEL: (555) 123-4567</p>
+              <div className="border-b border-black my-2"></div>
+              <p>ORDER: #{lastSale.receiptNo.toUpperCase()}</p>
+              <p>DATE: {new Date(lastSale.createdAt).toLocaleString()}</p>
+              <p>CASHIER: {lastSale?.cashierName || lastSale.cashierId}</p>
+            </div>
+
+            <div className="space-y-1 mb-4">
+              <div className="flex justify-between font-bold border-b border-black pb-1 mb-1">
+                <span>ITEM</span>
+                <span>TOTAL</span>
+              </div>
+              {lastSale.items.map(item => (
+                <div key={item.id} className="flex flex-col">
+                  <div className="flex justify-between">
+                    <span>{item.name}</span>
+                    <span>₱{(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                  <span className="text-[9pt]">{item.quantity} x ₱{item.price.toFixed(2)}</span>
+                </div>
+              ))}        
+            </div>
+            <div className="border-t border-black pt-2 space-y-1">
+              <div className="flex justify-between">
+                <span>SUBTOTAL:</span>
+                <span>₱{(lastSale.totalAmount / 1.1).toFixed(2)}</span>
+              </div>
+            <div className="flex justify-between">
+              <span>TAX (10%):</span>
+              <span>₱{(lastSale.totalAmount - (lastSale.totalAmount / 1.1)).toFixed(2)}</span>
+            </div>
+            </div>
+            <div className="text-center mt-8 pt-4 border-t border-dashed border-black">
+                <p>Payment: CASH</p>
+                <p className="mt-4 font-bold">THANK YOU FOR SHOPPING!</p>
+                <p className="text-[8pt] mt-2 italic">Visit us again</p>
+            </div>
+        </div>
+      )}
     </div>
   )
 }

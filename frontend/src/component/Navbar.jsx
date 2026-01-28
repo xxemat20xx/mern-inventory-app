@@ -73,7 +73,7 @@ const Navbar = ({ children }) => {
     <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950">
       
       {/* ---------------- SIDEBAR ---------------- */}
-      <aside className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex flex-col border-r bg-white dark:bg-slate-900 transition-all`}>
+      <aside className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex flex-col border-r bg-white dark:bg-slate-900 transition-all no-print`}>
         <div className="p-6 flex items-center gap-3">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
             <Package className="text-white" size={24} />
@@ -112,7 +112,7 @@ const Navbar = ({ children }) => {
       </aside>
 
       {/* ---------------- MOBILE NAV ---------------- */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 flex justify-around bg-white dark:bg-slate-900 border-t">
+      <div className="no-print md:hidden fixed bottom-0 inset-x-0 flex justify-around bg-white dark:bg-slate-900 border-t">
         {items.map(item => (
           <NavButton
             key={item.key}
@@ -125,7 +125,7 @@ const Navbar = ({ children }) => {
 
       {/* ---------------- MAIN ---------------- */}
       <main className="flex-1 flex flex-col">
-        <header className="h-16 flex items-center justify-between px-6 border-b bg-white dark:bg-slate-900">
+        <header className="no-print h-16 flex items-center justify-between px-6 border-b bg-white dark:bg-slate-900">
           <div className="flex items-center gap-4">
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="hidden md:block">
             <Menu size={22} className="text-slate-50"/>

@@ -26,26 +26,26 @@ const Inventory = () => {
      quantity: 0,
      lowStockAlert: 0,
      barcode:'',
-     category:''
+     category:'General'
   });
-
+  
   useEffect(() => {
     getProducts();
   }, [getProducts]);
 
 const openModal = (product = null) => {
   if (product) {
-    setIsEditing(product._id);   // IMPORTANT
+    setIsEditing(product._id);
     setFormData({
-      name: product.name,
-      sku: product.sku,
-      price: product.price,
-      description: product.description || '',
-      cost: product.cost,
-      quantity: product.quantity,
-      lowStockAlert: product.lowStockAlert,
-      barcode: product.barcode || '',
-      category: product.category,
+      name: product.name ?? '',
+      sku: product.sku ?? '',
+      price: product.price ?? 0,
+      description: product.description ?? '',
+      cost: product.cost ?? 0,
+      quantity: product.quantity ?? 0,
+      lowStockAlert: product.lowStockAlert ?? 5,
+      barcode: product.barcode ?? '',
+      category: product.category ?? 'General', // ✅ KEY FIX
     });
   } else {
     setIsEditing(null);
@@ -53,15 +53,14 @@ const openModal = (product = null) => {
       name: '',
       sku: '',
       price: 0,
-      description:'',
+      description: '',
       cost: 0,
       quantity: 0,
       lowStockAlert: 5,
-      barcode:'',
-      category:''
+      barcode: '',
+      category: 'General', // ✅
     });
   }
-
   setIsModalOpen(true);
 };
 
@@ -73,10 +72,14 @@ const openModal = (product = null) => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = {
+      ...formData,
+      category: formData.category || 'General'
+    }
       if(isEditing){
-        await updateProduct(isEditing, formData);
+        await updateProduct(isEditing, payload);
        }else{
-        await createProduct(formData);
+        await createProduct(payload);
        }
        setIsModalOpen(false);
        getProducts();
@@ -155,8 +158,8 @@ const openModal = (product = null) => {
                     <div className="text-[10px] text-slate-400">Min: {p.lowStockAlert}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-slate-500 font-medium">Cost: ${p.cost.toFixed(2)}</div>
-                    <div className="text-sm font-bold text-indigo-600 dark:text-indigo-400">${p.price.toFixed(2)}</div>
+                    <div className="text-sm text-slate-500 font-medium">Cost: ₱{p.cost.toFixed(2)}</div>
+                    <div className="text-sm font-bold text-indigo-600 dark:text-indigo-400">₱{p.price.toFixed(2)}</div>
                   </td>
                   <td className="px-6 py-4">
                     {p.quantity <= 0 ? (

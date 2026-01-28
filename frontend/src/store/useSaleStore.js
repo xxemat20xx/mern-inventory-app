@@ -7,25 +7,36 @@ export const useSaleStore = create((set) => ({
   stats: {
     totalRevenue: 0,
     totalItemsSold: 0,
-    totalProfit: 0
+    totalProfit: 0,
+    salesData:[]
   },
   isLoading: false,
   error: null,
   lastSale: null,
 
   // ===== ACTIONS =====
-  fetchDashboardStats: async () => {
-    set({ isLoading: true, error: null });
-    try {
-      const res = await api.get("/sales/stats");
-      set({ stats: res.data, isLoading: false });
-    } catch (err) {
-      set({
-        error: err.response?.data?.message || "Failed to load stats",
-        isLoading: false
-      });
-    }
-  },
+fetchDashboardStats: async () => {
+  set({ isLoading: true, error: null });
+  try {
+    const res = await api.get("/sales/stats");
+
+    set((state) => ({
+      stats: {
+        ...state.stats,   // 👈 keep salesData
+        ...res.data       // 👈 override only what exists
+      },
+      isLoading: false
+    }));
+  } catch (err) {
+    set({
+      error: err.response?.data?.message || "Failed to load stats",
+      isLoading: false
+    });
+  }
+},
+
+
+
 checkoutSale: async ({ cart, paymentMethod = "cash" }) => {
   set({ isLoading: true, error: null });
 
