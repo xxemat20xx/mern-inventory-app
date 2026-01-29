@@ -8,7 +8,7 @@ export const createSale = async (req, res) => {
   session.startTransaction();
 
   try {
-    const { items, paymentMethod } = req.body;
+    const { items, paymentMethod, cashierName } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
       await session.abortTransaction();
@@ -53,7 +53,8 @@ export const createSale = async (req, res) => {
       items: saleItems,
       paymentMethod,
       totalAmount,
-      cashierId: req.user.userId || null
+      cashierName,
+      cashierId: req.user.userId || null,
     }], { session });
 
     await session.commitTransaction();

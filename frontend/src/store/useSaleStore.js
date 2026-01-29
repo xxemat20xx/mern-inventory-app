@@ -37,7 +37,7 @@ fetchDashboardStats: async () => {
 
 
 
-checkoutSale: async ({ cart, paymentMethod = "cash" }) => {
+checkoutSale: async ({ cart, paymentMethod = "cash", cashierName}) => {
   set({ isLoading: true, error: null });
 
   const payload = {
@@ -45,7 +45,8 @@ checkoutSale: async ({ cart, paymentMethod = "cash" }) => {
       productId: item.product._id,
       quantity: item.quantity
     })),
-    paymentMethod
+    paymentMethod,
+    cashierName
   };
 
   try {
@@ -72,10 +73,10 @@ fetchPurchaseLogs: async () => {
       set({ sales: res.data, isLoading: false });
   } catch (error) {
       set({
-      error: err.response?.data?.message || "Checkout failed",
+      error: error.response?.data?.message || "Checkout failed",
       isLoading: false
     });
-    throw err;
+    throw error;
   }
 
 },

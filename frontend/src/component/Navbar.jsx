@@ -23,7 +23,6 @@ const NAV_ITEMS = [
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/dashboard", adminOnly: true },
   { key: "inventory", label: "Inventory", icon: Package2, path: "/inventory", adminOnly: true },
   { key: "terminal", label: "Terminal", icon: ShoppingCart, path: "/terminal" },
-  { key: "analytics", label: "Analytics", icon: ChartColumn, path: "/analytics", adminOnly: true },
   { key: "sales", label: "Sales Logs", icon: TrendingUp, path: "/sales" },
   { key: "stock", label: "Stock Logs", icon: PackageCheck, path: "/stock", adminOnly: true },
 ];

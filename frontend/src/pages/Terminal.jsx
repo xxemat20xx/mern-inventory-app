@@ -18,7 +18,7 @@ import { useAuthStore } from '../store/useAuthStore'
 
 const Terminal = () => {
   const { products, getProducts } = useInventoryStore();
-  const { checkoutSale, fetchPurchaseLogs, sales } = useSaleStore();
+  const { checkoutSale, fetchPurchaseLogs } = useSaleStore();
   const { user } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]); 
@@ -73,7 +73,11 @@ const Terminal = () => {
     if(cart.length === 0) return;
     setIsProcessing(true);
     try {
-      const sale = await checkoutSale({cart, paymentMethod: "cash"});
+      const sale = await checkoutSale({
+        cart, 
+        paymentMethod: "cash",
+        cashierName: user.email.split("@")[0] || "User"
+      });
       await delay(1000); //delay 1 seconds
 
       setLastSale(sale);
@@ -82,7 +86,7 @@ const Terminal = () => {
       setShowReceipt(true);
       getProducts(); 
     } catch (error) {
-      throw error
+      console.error(error)
     }
   }
   const printReceipt = () => {
@@ -92,7 +96,7 @@ const Terminal = () => {
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
   const tax = subtotal * 0.1; //10%
   const total = subtotal + tax;
-
+  console.log(lastSale)
   return(
      <div className="h-full flex flex-col lg:flex-row gap-6 animate-in fade-in duration-500">
       {/* Product Selection */}
@@ -280,7 +284,7 @@ const Terminal = () => {
               <div className="border-b border-black my-2"></div>
               <p>ORDER: #{lastSale.receiptNo.toUpperCase()}</p>
               <p>DATE: {new Date(lastSale.createdAt).toLocaleString()}</p>
-              <p>CASHIER: {lastSale?.cashierName || lastSale.cashierId}</p>
+              <p>CASHIER: {lastSale?.cashierName || 'User'}</p>
             </div>
 
             <div className="space-y-1 mb-4">

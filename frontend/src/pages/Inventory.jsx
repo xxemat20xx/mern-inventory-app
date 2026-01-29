@@ -99,13 +99,13 @@ const openModal = (product = null) => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={20} />
           <input
             type="text"
             placeholder="Search by SKU, Name or Category..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="dark:bg-slate-900 text-slate-50 w-full pl-12 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
           />
         </div>
 
@@ -122,17 +122,17 @@ const openModal = (product = null) => {
         </div>
       </div>
       {/* Table */}
-      <div className="bg-white border rounded-2xl overflow-hidden">
+      <div className="bg-slate-900 border rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
            <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50">
-                <th className="px-6 py-4 text-xs font-bold uppercase">Product</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase">Category</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase">Stock</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase">Cost / Price</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase">Status</th>
-                <th className="px-6 py-4 text-right text-xs font-bold uppercase">Action</th>
+              <tr className="bg-slate-900">
+                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-50">Product</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-50">Category</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-50">Stock</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-50">Cost / Price</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-50">Status</th>
+                <th className="px-6 py-4 text-right text-xs font-bold uppercase text-slate-50">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -141,11 +141,11 @@ const openModal = (product = null) => {
                   
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
+                      <div className="w-10 h-10 rounded-lg dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
                         {p.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-bold text-sm">{p.name}</div>
+                        <div className="font-bold text-sm text-slate-50">{p.name}</div>
                         <div className="text-xs text-slate-400 font-mono tracking-tighter">#{p.sku}</div>
                       </div>
                     </div>
@@ -154,8 +154,8 @@ const openModal = (product = null) => {
                     <span className="text-sm text-slate-600 dark:text-slate-400">{p.category}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-bold">{p.quantity}</div>
-                    <div className="text-[10px] text-slate-400">Min: {p.lowStockAlert}</div>
+                    <div className="text-sm font-bold text-slate-50">{p.quantity}</div>
+                    <div className="text-[10px] text-slate-50">Min: {p.lowStockAlert}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-slate-500 font-medium">Cost: ₱{p.cost.toFixed(2)}</div>
@@ -201,7 +201,7 @@ const openModal = (product = null) => {
         {/* -------------------------- MODAL -------------------- */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-              <div className="bg-white rounded-2xl w-full max-w-2xl p-6">
+              <div className="dark:bg-slate-900 rounded-2xl w-full max-w-2xl p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold">
                     {isEditing ? 'Edit Product' : 'Add Product'}
@@ -211,20 +211,20 @@ const openModal = (product = null) => {
                   </button>
                 </div>   
             <form onSubmit={handleSubmit} className="space-y-4">
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">SKU / Barcode</label>
+                    <label className="block text-sm font-semibold ">SKU / Barcode</label>
                     <input 
                       required
                       type="text" 
                       value={formData.sku}
                       onChange={(e) => setFormData({...formData, sku: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full px-4 py-3 rounded-xl dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Product Name</label>
+                    <label className="block text-sm font-semibold ">Product Name</label>
                     <input 
                       required
                       type="text" 

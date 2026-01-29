@@ -10,7 +10,6 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import Terminal from "./pages/Terminal";
-import Analytics from "./pages/Analytics";
 import Sales from "./pages/Sales";
 import StockLogs from "./pages/StockLogs";
 
@@ -32,7 +31,6 @@ const App = () => {
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/inventory" element={<Inventory />} />
-            <Route path="/analytics" element={<Analytics />} />
             <Route path="/stock" element={<StockLogs />} />
           </>
         )}

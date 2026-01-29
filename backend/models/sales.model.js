@@ -29,6 +29,11 @@ const saleSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    cashierName: {
+        type: 'String',
+        required: false,
+        default: 'User'
+    },
     status:{
         type: String,
         enum: ['completed', 'refunded'],
