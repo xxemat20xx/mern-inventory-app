@@ -1,56 +1,91 @@
 import Product from "../models/product.model.js";
+import StockLog from '../models/stockLogs.model.js';
 
 // =========== CRUD OPERATIONS =========== //
 // Create Product
-export const createProduct = async ( req, res ) => {
-    try {
-        const {
-            name,
-            sku,
-            price,
-            description,
-            cost,
-            quantity,
-            lowStockAlert,
-            barcode,
-            category
-        } = req.body;
-        
-        //create new product
-        const newProduct = new Product({
-            name,
-            sku,
-            price,
-            description,
-            cost,
-            quantity,
-            lowStockAlert,
-            barcode,
-            category
-        })
-        await newProduct.save();
-        res.status(201).json(newProduct);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-        console.log(error);
+export const createProduct = async (req, res) => {
+  try {
+    const {
+      name,
+      sku,
+      price,
+      description,
+      cost,
+      quantity = 0,
+      lowStockAlert,
+      barcode,
+      category
+    } = req.body;
+
+    const parsedQuantity = Number(quantity) || 0;
+
+    const newProduct = new Product({
+      name,
+      sku,
+      price,
+      description,
+      cost,
+      quantity: parsedQuantity,
+      lowStockAlert,
+      barcode,
+      category
+    });
+
+    await newProduct.save();
+
+    if (parsedQuantity > 0) {
+      await StockLog.create({
+        productId: newProduct._id,
+        type: "initial",
+        change: parsedQuantity,
+        note: "Initial stock on product creation",
+        performedBy: req.user?.userId ?? null
+      });
     }
-}
+
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error("Create product error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Update Product
-export const updateProduct = async ( req, res ) => {
+export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
         const updates = req.body;
-        const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true });
-        if(!updatedProduct){
+
+        const product = await Product.findById(id);
+        if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+
+        // Check quantity change
+        if (updates.quantity !== undefined && updates.quantity !== product.quantity) {
+            const diff = updates.quantity - product.quantity;
+
+            await StockLog.create({
+                productId: product._id,
+                type: diff > 0 ? "restock" : "adjustment",
+                change: diff,
+                note: "Manual update via product edit",
+                performedBy: req.user?.userId || null
+            });
+        }
+
+        Object.assign(product, updates);
+        await product.save();
+
+        res.status(200).json({
+            message: 'Product updated successfully',
+            product
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
-        console.log(error);
     }
-}
+};
+
 
 // Delete Product
 export const deleteProduct = async ( req, res ) => {

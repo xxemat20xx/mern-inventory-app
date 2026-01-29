@@ -11,17 +11,14 @@ const stockLogSchema = new mongoose.Schema({
   },
 
   type: {
-    type: String,
-    enum: ['sale', 'restock', 'adjustment', 'refund']
-  },
-
-  note:{
-    type: String, 
-    default: ''
+  type: String,
+  enum: ['initial', 'sale', 'restock', 'adjustment', 'refund'],
+  required: true
   },
   performedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: false
   },    
 
   note: String

@@ -98,7 +98,7 @@ const openModal = (product = null) => {
      <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1 w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={20} />
           <input
             type="text"
@@ -115,7 +115,7 @@ const openModal = (product = null) => {
           </button>
           <button
             onClick={openModal}
-            className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold"
+            className="text-slate-50 flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-sm font-bold"
           >
             <Plus size={18} /> Add Product
           </button>
@@ -203,10 +203,11 @@ const openModal = (product = null) => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
               <div className="dark:bg-slate-900 rounded-2xl w-full max-w-2xl p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold">
+                  <h2 className="text-xl font-bold text-slate-50">
                     {isEditing ? 'Edit Product' : 'Add Product'}
                   </h2>
-                  <button onClick={() => setIsModalOpen(false)}>
+                  <button onClick={() => setIsModalOpen(false)}
+                    className='text-slate-50'>
                     <X />
                   </button>
                 </div>   
@@ -214,23 +215,23 @@ const openModal = (product = null) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold ">SKU / Barcode</label>
+                    <label className="block text-sm font-semibold text-slate-50 ">SKU / Barcode</label>
                     <input 
                       required
                       type="text" 
                       value={formData.sku}
                       onChange={(e) => setFormData({...formData, sku: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="text-slate-50 w-full px-4 py-3 rounded-xl dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold ">Product Name</label>
+                    <label className="block text-sm font-semibold text-slate-50">Product Name</label>
                     <input 
                       required
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                   <div>
@@ -238,7 +239,7 @@ const openModal = (product = null) => {
                     <select 
                       value={formData.category}
                       onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     >
                       <option>General</option>
                       <option>Beverages</option>
@@ -259,7 +260,7 @@ const openModal = (product = null) => {
                         step="0.01"
                         value={formData.cost}
                         onChange={(e) => setFormData({...formData, cost: parseFloat(e.target.value)})}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                     <div>
@@ -270,7 +271,7 @@ const openModal = (product = null) => {
                         step="0.01"
                         value={formData.price}
                         onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                   </div>
@@ -282,7 +283,7 @@ const openModal = (product = null) => {
                         type="number" 
                         value={formData.lowStockAlert}
                         onChange={(e) => setFormData({...formData, lowStockAlert: parseInt(e.target.value)})}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                     <div>
@@ -292,7 +293,7 @@ const openModal = (product = null) => {
                         type="number" 
                         value={formData.quantity}
                         onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value)})}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                   </div>

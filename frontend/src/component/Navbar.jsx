@@ -49,7 +49,6 @@ const NavButton = ({ item, onClick, isSidebarOpen, mobile }) => {
 
 const Navbar = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const { user, logout } = useAuthStore();

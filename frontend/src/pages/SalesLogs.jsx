@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react"
 import { useSaleStore } from "../store/useSaleStore"
-import { BadgeCheck } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const Sales = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedSale, setSelectedSale] = useState(null);
   const { fetchPurchaseLogs, sales } = useSaleStore();
 
   const ITEMS_PER_PAGE = 8;
@@ -35,17 +36,27 @@ const Sales = () => {
     }, [filteredData, currentPage]);
     
 
+  // ------------------- print ------------------------
+  const handlePrint = (sale) => {
+    setSelectedSale(sale);
+
+    // wait for state update before printing
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
   return (
     <div className="w-full mx-auto px-4 py-8">
         {/* Header Section */}
-        <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <header className="no-print mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Sales Logs</h1>
             <p className="text-slate-400">Manage and monitor your business transactions in real-time.</p>
           </div>           
         </header> 
         {/* Controls Bar */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div className="relative w-full sm:w-96">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg className="h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -64,7 +75,7 @@ const Sales = () => {
             />
           </div>
           
-          <div className="flex items-center gap-2 text-sm text-slate-400 font-medium">
+          <div className="no-print flex items-center gap-2 text-sm text-slate-400 font-medium">
             <span>Page {currentPage} of {totalPages || 1}</span>
             <div className="flex gap-1 ml-2">
               <button 
@@ -89,7 +100,7 @@ const Sales = () => {
           </div>
         </div>
         {/* Table Section */}
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
+        <div className="no-print bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -100,6 +111,7 @@ const Sales = () => {
                     <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Method</th>
                     <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Status</th>
                     <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Date</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-700">
@@ -142,6 +154,14 @@ const Sales = () => {
                           })}
                         </span>
                       </td>
+                      <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => handlePrint(sale)}
+                        className="text-slate-50 hover:text-green-500 cursor-pointer"
+                      >
+                        <Printer size={22} />
+                      </button>
+                      </td>
                     </tr>
                   )) : (
                     <tr>
@@ -160,6 +180,51 @@ const Sales = () => {
               </table>
             </div>
         </div>
+        {selectedSale && (
+        <div className="print-only hidden font-mono text-[10pt] w-[80mm] mx-auto p-4 border border-dashed border-slate-300">
+            <div className="text-center mb-6">
+              <h1 className="text-xl font-bold">INVENTORY APP</h1>
+              <p>123 Digital Ave, Planet Namik</p>
+              <p>TEL: (555) 123-4567</p>
+              <div className="border-b border-black my-2"></div>
+              <p>ORDER: #{selectedSale.receiptNo.toUpperCase()}</p>
+              <p>DATE: {new Date(selectedSale.createdAt).toLocaleString()}</p>
+              <p>CASHIER: {selectedSale?.cashierName || 'User'}</p>
+            </div>
+
+            <div className="space-y-1 mb-4">
+              <div className="flex justify-between font-bold border-b border-black pb-1 mb-1">
+                <span>ITEM</span>
+                <span>TOTAL</span>
+              </div>
+              {selectedSale.items.map(item => (
+                <div key={item.id} className="flex flex-col">
+                  <div className="flex justify-between">
+                    <span>{item.name}</span>
+                    <span>₱{(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                  <span className="text-[9pt]">{item.quantity} x ₱{item.price.toFixed(2)}</span>
+                </div>
+              ))}        
+            </div>
+            <div className="border-t border-black pt-2 space-y-1">
+              <div className="flex justify-between">
+                <span>SUBTOTAL:</span>
+                <span>₱{(selectedSale.totalAmount / 1.1).toFixed(2)}</span>
+              </div>
+            <div className="flex justify-between">
+              <span>TAX (10%):</span>
+              <span>₱{(selectedSale.totalAmount - (selectedSale.totalAmount / 1.1)).toFixed(2)}</span>
+            </div>
+            </div>
+            <div className="text-center mt-8 pt-4 border-t border-dashed border-black">
+                <p>Payment: CASH</p>
+                <p className="mt-4 font-bold">THANK YOU FOR SHOPPING!</p>
+                <p className="text-[8pt] mt-2 italic">Visit us again</p>
+            </div>
+        </div>
+        )}
+
     </div>
   )
 }
