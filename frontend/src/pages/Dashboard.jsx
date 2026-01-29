@@ -16,23 +16,25 @@ import { useInventoryStore } from '../store/useInventoryStore';
 
 const Dashboard = () => {
   const { fetchDashboardStats, stats } = useSaleStore();
-  const { products, fetchPurchaseLogs} = useInventoryStore();
+  const { products, getProducts } = useInventoryStore();
 
-  const lowStockItem = useMemo (() => {
-    return products
-    .filter(p => p.quantity <= p.lowStockAlert)
-    .slice(0, 5)
-  },[products]);
+  const lowStockItem = useMemo(() => {
+    return products?.length ? products.filter(p => p.quantity <= p.lowStockAlert).slice(0, 5) : [];
+  }, [products]);
+
   const categoryData = useMemo(() => {
     const counts = {};
-    products.forEach(p => {
-      counts[p.category] = (counts[p.category] || 0 ) + 1;
-    });
-    return Object.entries(counts).map(([name, value]) => ({
-      name,
-      value
-    }));
-  },[products]);
+    if (products?.length) {
+      products.forEach(p => {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+      });
+      return Object.entries(counts).map(([name, value]) => ({
+        name,
+        value
+      }));
+    }
+    return []; 
+  }, [products]);
 
   const COLORS = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
     
@@ -44,8 +46,10 @@ const Dashboard = () => {
     ];
   useEffect(() => {
     fetchDashboardStats()
-  },[fetchDashboardStats]);
-  console.log(stats)
+    getProducts()
+  
+  },[fetchDashboardStats, getProducts]);
+  
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -127,7 +131,7 @@ const Dashboard = () => {
           <h3 className="font-bold text-lg mb-6 text-slate-50">Restock Needed</h3>
           <div className="space-y-4">
             {lowStockItem.length > 0 ? lowStockItem.map((p) => (
-              <div key={p.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <div key={p._id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
                     {p.name.charAt(0)}

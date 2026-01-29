@@ -96,7 +96,7 @@ const Terminal = () => {
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
   const tax = subtotal * 0.1; //10%
   const total = subtotal + tax;
-  console.log(lastSale)
+ 
   return(
      <div className="h-full flex flex-col lg:flex-row gap-6 animate-in fade-in duration-500">
       {/* Product Selection */}

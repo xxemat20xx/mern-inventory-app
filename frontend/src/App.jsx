@@ -10,7 +10,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import Terminal from "./pages/Terminal";
-import Sales from "./pages/Sales";
+import SalesLogs from "./pages/SalesLogs";
 import StockLogs from "./pages/StockLogs";
 
 const App = () => {
@@ -37,7 +37,7 @@ const App = () => {
 
         {/* Shared routes */}
         <Route path="/terminal" element={<Terminal />} />
-        <Route path="/sales" element={<Sales />} />
+        <Route path="/sales" element={<SalesLogs />} />
 
         {/* Fallback */}
         <Route

@@ -5,12 +5,9 @@ import {
   Package,
   LayoutDashboard,
   ShoppingCart,
-  ChartColumn,
   TrendingUp,
   Package2,
   PackageCheck,
-  Sun,
-  Moon,
   LogOut,
   Menu,
   ShieldCheck,
@@ -31,7 +28,6 @@ const NAV_ITEMS = [
 
 const NavButton = ({ item, onClick, isSidebarOpen, mobile }) => {
   const Icon = item.icon;
-
   return (
     <button
       onClick={onClick}
@@ -91,18 +87,10 @@ const Navbar = ({ children }) => {
           ))}
         </nav>
 
-        <div className="p-4 space-y-2 border-t">
-          <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-slate-50 "
-          >
-            {isDarkMode ? <Sun /> : <Moon />}
-            {isSidebarOpen && <span>{isDarkMode ? "Light" : "Dark"} Mode</span>}
-          </button>
-
+        <div className="p-4 space-y-2">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-4 px-4 py-3 text-rose-500 rounded-lg"
+            className="w-full flex items-center gap-4 px-4 py-3 text-rose-500 rounded-lg cursor-pointer"
           >
             <LogOut />
             {isSidebarOpen && <span>Logout</span>}
