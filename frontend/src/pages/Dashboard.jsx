@@ -1,4 +1,5 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect,useState } from 'react';
+import { Loading } from '../component/Loading'
 import { 
   TrendingUp, 
   Users, 
@@ -14,10 +15,12 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useSaleStore } from '../store/useSaleStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 
+
 const Dashboard = () => {
   const { fetchDashboardStats, stats, isLoading } = useSaleStore();
   const { products, getProducts } = useInventoryStore();
-
+  const [progress, setProgress] = useState(0);
+  
   const lowStockItem = useMemo(() => {
     return products?.length ? products.filter(p => p.quantity <= p.lowStockAlert).slice(0, 5) : [];
   }, [products]);
@@ -50,12 +53,36 @@ const Dashboard = () => {
   
   },[fetchDashboardStats, getProducts]);
   
-  if(isLoading){
-    return <div>Loading....</div>
-  }
+  // Loader helper
+  useEffect(() => {
+  let interval;
+
+    if (isLoading) {
+      interval = setInterval(() => {
+        setProgress(prev => (prev < 90 ? prev + 5 : prev));
+      }, 300);
+    } else {
+      // defer reset to avoid cascading render
+      const timeout = setTimeout(() => {
+        setProgress(0);
+      }, 0);
+
+      return () => clearTimeout(timeout);
+    }
+
+    return () => clearInterval(interval);
+  }, [isLoading]);
+
+  
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Top Cards */}
+        {isLoading && (
+          <Loading
+            progress={progress}
+            message="Loading dashboard..."
+          />
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map((card, idx) => (
             <div key={idx} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">

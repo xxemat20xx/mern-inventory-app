@@ -15,9 +15,10 @@ import {
 import { useInventoryStore } from '../store/useInventoryStore';
 import { useSaleStore } from '../store/useSaleStore';
 import { useAuthStore } from '../store/useAuthStore'
+import { Loading } from '../component/Loading';
 
 const Terminal = () => {
-  const { products, getProducts } = useInventoryStore();
+  const { products, getProducts, isLoading} = useInventoryStore();
   const { checkoutSale, fetchPurchaseLogs } = useSaleStore();
   const { user } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,6 +27,7 @@ const Terminal = () => {
   const[lastSale, setLastSale] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
   const barcodeInputRef = useRef(null);
+  const [progress, setProgress] = useState(0);
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   useEffect(() => {
@@ -93,12 +95,47 @@ const Terminal = () => {
     window.print();
   }
   const handleBarcodeSubmit = () => {}
+
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
-  const tax = subtotal * 0.1; //10%
-  const total = subtotal + tax;
- 
+  const tax = +(subtotal * 0.1).toFixed(2);
+  const total = +(subtotal + tax).toFixed(2);
+
+  // Receipt computation
+  const receiptSubtotal = lastSale?.items?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
+  const receiptTax = +(receiptSubtotal * 0.1).toFixed(2);
+  const receiptTotal = +(receiptSubtotal + receiptTax).toFixed(2);
+
+
+
+     // Loader helper
+    useEffect(() => {
+    let interval;
+  
+      if (isLoading) {
+        interval = setInterval(() => {
+          setProgress(prev => (prev < 90 ? prev + 5 : prev));
+        }, 300);
+      } else {
+        // defer reset to avoid cascading render
+        const timeout = setTimeout(() => {
+          setProgress(0);
+        }, 0);
+  
+        return () => clearTimeout(timeout);
+      }
+  
+      return () => clearInterval(interval);
+    }, [isLoading]);
+
   return(
      <div className="h-full flex flex-col lg:flex-row gap-6 animate-in fade-in duration-500">
+      {/* Loading Screen */}
+        {isLoading && (
+          <Loading
+            progress={progress}
+            message="Fetching data..."
+          />
+        )}      
       {/* Product Selection */}
       <div className="flex-1 flex flex-col min-h-0 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm no-print">
           <div className="p-4 border-b border-slate-100 dark:border-slate-800">
@@ -225,7 +262,7 @@ const Terminal = () => {
               </div>
               <div className="flex justify-between text-xl font-bold pt-2">
                 <span className='text-slate-50'>Total</span>
-                <span className="text-indigo-600 dark:text-indigo-400">₱{total.toFixed(2)}</span>
+                <span className="text-slate-50">₱{total.toFixed(2)}</span>
               </div>
         {/* ------------------------ Checkout ------------------- */}
           <button 
@@ -309,7 +346,11 @@ const Terminal = () => {
               </div>
             <div className="flex justify-between">
               <span>TAX (10%):</span>
-              <span>₱{(lastSale.totalAmount - (lastSale.totalAmount / 1.1)).toFixed(2)}</span>
+              <span>₱{receiptTax}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Total:</span>
+              <span>₱{receiptTotal}</span>
             </div>
             </div>
             <div className="text-center mt-8 pt-4 border-t border-dashed border-black">

@@ -9,14 +9,16 @@ import {
   AlertCircle,
   PackageCheck
 } from 'lucide-react';
+import { Loading } from '../component/Loading';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { useEffect, useState } from 'react';
 
 const Inventory = () => {
-  const { products, getProducts, deleteProduct, createProduct, updateProduct } = useInventoryStore();
+  const { products, getProducts, deleteProduct, createProduct, updateProduct, isLoading } = useInventoryStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
+  const [progress, setProgress] = useState(0);
   const [formData, setFormData] = useState({
      name: '',
      sku: '',
@@ -94,8 +96,35 @@ const openModal = (product = null) => {
     );
   });
 
+    // Loader helper
+    useEffect(() => {
+    let interval;
+  
+      if (isLoading) {
+        interval = setInterval(() => {
+          setProgress(prev => (prev < 90 ? prev + 5 : prev));
+        }, 300);
+      } else {
+        // defer reset to avoid cascading render
+        const timeout = setTimeout(() => {
+          setProgress(0);
+        }, 0);
+  
+        return () => clearTimeout(timeout);
+      }
+  
+      return () => clearInterval(interval);
+    }, [isLoading]);
+
   return (
      <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Loading Screen */}
+        {isLoading && (
+          <Loading
+            progress={progress}
+            message="Fetching data..."
+          />
+        )}
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="relative flex-1 w-full">

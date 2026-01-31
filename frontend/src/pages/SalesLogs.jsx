@@ -75,7 +75,7 @@ const Sales = () => {
               }}
             />
           </div>
-          
+          {/* Pagination */}
           <div className="no-print flex items-center gap-2 text-sm text-slate-400 font-medium">
             <span>Page {currentPage} of {totalPages || 1}</span>
             <div className="flex gap-1 ml-2">
