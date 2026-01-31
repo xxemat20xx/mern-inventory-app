@@ -16,7 +16,7 @@ router.put("/update/:id", protectedRoute, adminOnly, updateProduct);
 router.delete("/delete/:id",protectedRoute, adminOnly, deleteProduct);
 
 // public routes
-router.get("/get/:id", getProduct);
-router.get("/get", getProducts);
+router.get("/get/:id",protectedRoute, getProduct);
+router.get("/get", protectedRoute, getProducts);
 
 export default router;
