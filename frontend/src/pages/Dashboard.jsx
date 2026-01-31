@@ -15,7 +15,7 @@ import { useSaleStore } from '../store/useSaleStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 
 const Dashboard = () => {
-  const { fetchDashboardStats, stats } = useSaleStore();
+  const { fetchDashboardStats, stats, isLoading } = useSaleStore();
   const { products, getProducts } = useInventoryStore();
 
   const lowStockItem = useMemo(() => {
@@ -50,7 +50,9 @@ const Dashboard = () => {
   
   },[fetchDashboardStats, getProducts]);
   
-
+  if(isLoading){
+    return <div>Loading....</div>
+  }
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Top Cards */}

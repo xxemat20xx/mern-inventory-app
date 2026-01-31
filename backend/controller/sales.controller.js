@@ -44,6 +44,7 @@ export const createSale = async (req, res) => {
         productId: product._id,
         type: "sale",
         change: -item.quantity,
+        note: `Stock decrease by -${item.quantity} units`,
         performedBy: req.user.userId || null
       }], { session });
     }

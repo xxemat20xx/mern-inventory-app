@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { useSaleStore } from "../store/useSaleStore"
 import { Printer } from 'lucide-react';
+import { Loading } from "../component/Loading";
 
 const Sales = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,9 +48,9 @@ const Sales = () => {
   };
 
   return (
-    <div className="w-full mx-auto px-4 py-8">
+    <div className="w-full mx-auto">
         {/* Header Section */}
-        <header className="no-print mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <header className="no-print mb-4 flex flex-col md:flex-row md:items-end justify-between gap-2">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Sales Logs</h1>
             <p className="text-slate-400">Manage and monitor your business transactions in real-time.</p>
