@@ -94,8 +94,15 @@ const Terminal = () => {
   const printReceipt = () => {
     window.print();
   }
-  const handleBarcodeSubmit = () => {}
-
+  const handleBarcodeSubmit = (e) => {
+    e.preventDefault();
+    const product = products.find(p => p.sku === searchTerm);
+        if (product) {
+      addToCart(product);
+      setSearchTerm('');
+    }
+  }
+  console.log(products)
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
   const tax = +(subtotal * 0.1).toFixed(2);
   const total = +(subtotal + tax).toFixed(2);

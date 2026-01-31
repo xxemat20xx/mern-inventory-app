@@ -8,7 +8,6 @@ const productSchema = new mongoose.Schema({
     cost: { type: Number, required: true }, // sensitive field
     quantity: { type: Number, required: true },
     lowStockAlert: { type: Number, default: 10 },
-    barcode: { type: String, default: "" },
     category: { type: String }
 }, 
 { timestamps: true });

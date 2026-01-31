@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import {
   Package,
   ShieldCheck,
-  User,
+  User as UserIcon,
   ArrowRight,
 } from 'lucide-react';
 
@@ -13,6 +13,7 @@ const Login = () => {
   const { login} = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('ADMIN');
 
   const handleLogin = async(e) => {
     e.preventDefault();
@@ -20,7 +21,6 @@ const Login = () => {
   };
 
   return (
-    
     <div className="min-h-screen flex items-center justify-center bg-slate-900">
       <div className="w-full max-w-md">
         <div className="rounded-3xl shadow-xl p-8 bg-slate-800">
@@ -41,6 +41,40 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setRole('ADMIN')
+                  setEmail('test@gmail.com')
+                  setPassword('123456')
+                }}
+                className={`text-slate-50 p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                  role === 'ADMIN' 
+                    ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
+                    : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
+                }`}
+              >
+                <ShieldCheck size={24} />
+                <span className="text-sm font-medium">Admin</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRole('STAFF')
+                  setEmail('test2@gmail.com')
+                  setPassword('123456')
+                }}
+                className={`text-slate-50 p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                  role === 'STAFF' 
+                    ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
+                    : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
+                }`}
+              >
+                <UserIcon size={24} />
+                <span className="text-sm font-medium">Staff</span>
+              </button>
+            </div>           
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
