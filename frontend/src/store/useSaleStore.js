@@ -22,8 +22,9 @@ fetchDashboardStats: async () => {
 
     set((state) => ({
       stats: {
-        ...state.stats,   // 👈 keep salesData
-        ...res.data       // 👈 override only what exists
+        ...state.stats, 
+        ...res.data,
+        salesData: Array.isArray(res.data.salesData) ? res.data.salesData : []
       },
       isLoading: false
     }));
@@ -54,8 +55,10 @@ checkoutSale: async ({ cart, paymentMethod = "cash", cashierName}) => {
 
     set({
       lastSale: res.data,
-      isLoading: false
+      isLoading: false,
+      items: Array.isArray(res.data.items) ? res.data.items : []
     });
+
 
     return res.data;
   } catch (err) {

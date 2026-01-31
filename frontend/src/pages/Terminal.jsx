@@ -36,10 +36,13 @@ const Terminal = () => {
   }, [getProducts, fetchPurchaseLogs]);
 
 
-  const filteredProducts = products.filter((p) => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = Array.isArray(products) 
+    ? products.filter((p) => 
+        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
   const addToCart = (product) => {
     if(product.quantity <= 0) return;
     setCart(prev => {
@@ -94,6 +97,7 @@ const Terminal = () => {
   const printReceipt = () => {
     window.print();
   }
+  
   const handleBarcodeSubmit = (e) => {
     e.preventDefault();
     const product = products.find(p => p.sku === searchTerm);
@@ -102,7 +106,7 @@ const Terminal = () => {
       setSearchTerm('');
     }
   }
-  console.log(products)
+
   const subtotal = cart.reduce((sum, { product, quantity }) => sum + product.price * quantity, 0);
   const tax = +(subtotal * 0.1).toFixed(2);
   const total = +(subtotal + tax).toFixed(2);
@@ -337,7 +341,7 @@ const Terminal = () => {
                 <span>TOTAL</span>
               </div>
               {lastSale.items.map(item => (
-                <div key={item.id} className="flex flex-col">
+                <div key={item._id} className="flex flex-col">
                   <div className="flex justify-between">
                     <span>{item.name}</span>
                     <span>₱{(item.price * item.quantity).toFixed(2)}</span>

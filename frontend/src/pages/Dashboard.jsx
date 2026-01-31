@@ -22,22 +22,19 @@ const Dashboard = () => {
   const [progress, setProgress] = useState(0);
   
   const lowStockItem = useMemo(() => {
-    return products?.length ? products.filter(p => p.quantity <= p.lowStockAlert).slice(0, 5) : [];
+      return Array.isArray(products) 
+          ? products.filter(p => p.quantity <= p.lowStockAlert).slice(0, 5)
+          : [];
   }, [products]);
 
-  const categoryData = useMemo(() => {
-    const counts = {};
-    if (products?.length) {
-      products.forEach(p => {
-        counts[p.category] = (counts[p.category] || 0) + 1;
-      });
-      return Object.entries(counts).map(([name, value]) => ({
-        name,
-        value
-      }));
-    }
-    return []; 
-  }, [products]);
+    const categoryData = useMemo(() => {
+        if (!Array.isArray(products)) return [];
+        const counts = {};
+        products.forEach(p => {
+            counts[p.category] = (counts[p.category] || 0) + 1;
+        });
+        return Object.entries(counts).map(([name, value]) => ({ name, value }));
+    }, [products]);
 
   const COLORS = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
     

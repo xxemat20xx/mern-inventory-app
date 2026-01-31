@@ -24,7 +24,7 @@ export const useInventoryStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
         const response = await api.get('/products/get');
-        set({ products: response.data, isLoading: false });
+        set({ products: Array.isArray(response.data) ? response.data : [], isLoading: false });
     } catch (error) {
         console.log(error);
         set({ error: error.response?.data?.message, isLoading: false });
