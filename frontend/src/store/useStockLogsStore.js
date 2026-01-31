@@ -46,8 +46,16 @@ export const useStockLogsStore = create((set) => ({
 
     try {
       const res = await api.get("/stockLogs/getStockLogs");
+
+      // ✅ normalize data to always be an array
+      const logsArray = Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.data?.data)
+        ? res.data.data
+        : [];
+
       set({
-        logs: res.data,
+        logs: logsArray,
         isLoading: false
       });
     } catch (error) {

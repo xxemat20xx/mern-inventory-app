@@ -15,19 +15,21 @@ import SalesLogs from "./pages/SalesLogs";
 import StockLogs from "./pages/StockLogs";
 
 const App = () => {
-  const { user, isAuthenticated, checkAuth} = useAuthStore();
+  const { user, isAuthenticated, isCheckingAuth, checkAuth } = useAuthStore();
   
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  if(!isAuthenticated) return <Login />
+  // ✅ Show loading while checking auth
+  if (isCheckingAuth) return <div>Loading...</div>;
 
+  // ✅ Not authenticated → show login
+  if (!isAuthenticated) return <Login />;
 
   return (
     <Navbar>
       <Routes>
-        {/* Admin routes */}
         {user?.role === "admin" && (
           <>
             <Route path="/dashboard" element={<Dashboard />} />
@@ -53,6 +55,6 @@ const App = () => {
       </Routes>
     </Navbar>
   );
-}
+};
 
-export default App
+export default App;

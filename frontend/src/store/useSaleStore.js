@@ -67,18 +67,24 @@ checkoutSale: async ({ cart, paymentMethod = "cash", cashierName}) => {
   }
 },
 fetchPurchaseLogs: async () => {
-  set({isLoading: true, error: null});
+  set({ isLoading: true, error: null });
   try {
-     const res = await api.get("/sales/salesLogs");
-      set({ sales: res.data, isLoading: false });
+    const res = await api.get("/sales/salesLogs");
+
+    const salesArray = Array.isArray(res.data)
+      ? res.data
+      : Array.isArray(res.data?.data)
+      ? res.data.data
+      : [];
+
+    set({ sales: salesArray, isLoading: false });
   } catch (error) {
-      set({
-      error: error.response?.data?.message || "Checkout failed",
+    set({
+      error: error.response?.data?.message || "Failed to fetch sales logs",
       isLoading: false
     });
     throw error;
   }
-
 },
   resetStats: () =>
     set({
