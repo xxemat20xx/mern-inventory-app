@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import {useAuthStore} from "./store/useAuthStore"
-import { useEffect } from "react"
+import { useAuthStore } from "./store/useAuthStore";
+import { useEffect } from "react";
 
 // components
 import Navbar from "./component/Navbar";
@@ -15,21 +15,23 @@ import SalesLogs from "./pages/SalesLogs";
 import StockLogs from "./pages/StockLogs";
 
 const App = () => {
-  const { user, isAuthenticated, isCheckingAuth, checkAuth } = useAuthStore();
-  
+  const { user, isAuthenticated, checkAuth, isCheckingAuth } = useAuthStore();
+
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  // ✅ Show loading while checking auth
-  if (isCheckingAuth) return <div>Loading...</div>;
+  // ---------------- WAIT FOR AUTH CHECK ----------------
+  if (isCheckingAuth) return <Loading progress={50} message="Checking authentication..." />;
 
-  // ✅ Not authenticated → show login
+  // ---------------- SHOW LOGIN IF NOT AUTH ----------------
   if (!isAuthenticated) return <Login />;
 
+  // ---------------- MAIN APP ----------------
   return (
     <Navbar>
       <Routes>
+        {/* Admin routes */}
         {user?.role === "admin" && (
           <>
             <Route path="/dashboard" element={<Dashboard />} />
@@ -42,7 +44,7 @@ const App = () => {
         <Route path="/terminal" element={<Terminal />} />
         <Route path="/sales" element={<SalesLogs />} />
 
-        {/* Fallback */}
+        {/* Fallback route */}
         <Route
           path="*"
           element={

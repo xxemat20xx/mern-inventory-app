@@ -27,14 +27,14 @@ const StockLogs = () => {
 
   /* ---------------- FILTER ---------------- */
   const filteredLogs = useMemo(() => {
-    if (!Array.isArray(logs)) return [];
     const query = searchQuery.toLowerCase();
-    return logs.filter(log =>
-      log?.productId?.name?.toLowerCase().includes(query) ||
-      log?.performedBy?.email?.toLowerCase().includes(query) ||
-      log?.note?.toLowerCase().includes(query)
+    return (logs || []).filter(log =>
+      log.productId?.name?.toLowerCase().includes(query) ||
+      log.performedBy?.email?.toLowerCase().includes(query) ||
+      log.note?.toLowerCase().includes(query)
     );
   }, [logs, searchQuery]);
+
 
 
   /* ---------------- PAGINATION ---------------- */
