@@ -9,14 +9,28 @@ import stockLogsRoutes from './routes/stockLogs.routes.js'
 
 import dotenv from 'dotenv';
 
+import path from 'path';
 
 dotenv.config(); // Load environment variables from .env file
 
 const PORT = process.env.PORT || 5001; 
-
+const __dirname = path.resolve();
 const app = express(); 
+
 app.use(express.json()); 
 app.use(cookieParser()); 
+
+// Serve static files from the React frontend app
+if (process.env.NODE_ENV === 'production') {
+  const frontendPath = path.join(__dirname, '../frontend/dist');
+
+  app.use(express.static(frontendPath));
+
+  // React Router fallback (Node 22 safe)
+  app.use((req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
+}
 
 //cors config
 app.use(cors({
