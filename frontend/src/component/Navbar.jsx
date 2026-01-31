@@ -67,6 +67,7 @@ const Navbar = ({ children }) => {
   /* ---------------- SAFE LOGOUT ---------------- */
   const handleLogout = async () => {
     await logout();
+    navigate("/")
   };
 
   return (

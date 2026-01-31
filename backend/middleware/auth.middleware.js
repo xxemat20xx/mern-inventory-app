@@ -14,8 +14,8 @@ export const protectedRoute = (req, res, next) => {
   }
 };
 export const adminOnly = (req, res, next) => {
-  if (!req.user || req.user.role !== "admin") {
-    return res.sendStatus(403);
+  if (!req.user || req.user.role.toLowerCase() !== "admin") {
+  return res.sendStatus(403);
   }
   next();
 };

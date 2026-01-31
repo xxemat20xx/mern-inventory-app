@@ -3,16 +3,7 @@ import jwt from "jsonwebtoken";
 import { cookieOptions } from "../utils/cookie.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
 
-/**
- * Shared cookie config
- * MUST be identical for set & clear
- */
-const baseCookieOptions = {
-  ...cookieOptions,
-  path: "/",
-};
-
-/* ================= REGISTER ================= */
+// ============ REGISTER ============ //
 export const register = async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -27,12 +18,12 @@ export const register = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-/* ================= LOGIN ================= */
+// ============ LOGIN ============ //
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,21 +36,20 @@ export const login = async (req, res) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    // single-session rotation
+    // SINGLE SESSION (rotate)
     user.refreshTokens = [refreshToken];
     await user.save();
 
     res.cookie("accessToken", accessToken, {
-      ...baseCookieOptions,
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      ...cookieOptions,
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
     });
-
     res.cookie("refreshToken", refreshToken, {
-      ...baseCookieOptions,
+      ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.status(200).json({
+    res.json({
       user: {
         id: user._id,
         email: user.email,
@@ -67,48 +57,46 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("LOGIN ERROR:", error);
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-/* ================= LOGOUT ================= */
+// ============ LOGOUT ============ //
 export const logout = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  const token = req.cookies.refreshToken; // ✅ fixed
 
   try {
-    if (refreshToken) {
+    if (token) {
       await User.updateOne(
-        { refreshTokens: refreshToken },
-        { $pull: { refreshTokens: refreshToken } }
+        { refreshTokens: token },
+        { $pull: { refreshTokens: token } }
       );
     }
 
-    res.clearCookie("accessToken", baseCookieOptions);
-    res.clearCookie("refreshToken", baseCookieOptions);
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
 
-    res.status(200).json({ message: "Logged out successfully" });
+    res.json({ message: "Logged out successfully" });
   } catch (error) {
-    console.error("LOGOUT ERROR:", error);
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-/* ================= REFRESH TOKEN ================= */
+// ============ REFRESH TOKEN ============ //
 export const refreshToken = async (req, res) => {
-  const token = req.cookies.refreshToken;
+  const token = req.cookies.refreshToken; // ✅ fixed
 
   try {
-    if (!token) return res.sendStatus(401);
+    if (!token) return res.sendStatus(401); // unauthorized
 
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     const user = await User.findById(decoded.userId);
 
-    if (!user || !user.refreshTokens.includes(token)) {
-      return res.sendStatus(403);
-    }
+    if (!user || !user.refreshTokens.includes(token)) return res.sendStatus(403);
 
-    // rotate refresh token
+    // rotate tokens
     const newAccessToken = generateAccessToken(user);
     const newRefreshToken = generateRefreshToken(user);
 
@@ -116,23 +104,22 @@ export const refreshToken = async (req, res) => {
     await user.save();
 
     res.cookie("accessToken", newAccessToken, {
-      ...baseCookieOptions,
-      maxAge: 15 * 60 * 1000,
+      ...cookieOptions,
+      maxAge: 15 * 60 * 1000, // 15 min
     });
-
     res.cookie("refreshToken", newRefreshToken, {
-      ...baseCookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      ...cookieOptions,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     res.sendStatus(200);
   } catch (error) {
-    console.error("REFRESH TOKEN ERROR:", error);
+    console.error(error);
     res.sendStatus(403);
   }
 };
 
-/* ================= GET CURRENT USER ================= */
+// ============ GET CURRENT USER ============ //
 export const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select(

@@ -14,10 +14,12 @@ import path from 'path';
 dotenv.config(); // Load environment variables from .env file
 
 const app = express(); 
+// cors config
 app.use(cors({
   origin: 'http://localhost:5173', // frontend URL
   credentials: true,
 }));
+
 const PORT = process.env.PORT || 5001; 
 const __dirname = path.resolve();
 

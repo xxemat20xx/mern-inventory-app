@@ -14,7 +14,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 // state/store
 import { useSaleStore } from '../store/useSaleStore';
 import { useInventoryStore } from '../store/useInventoryStore';
-
+  
 
 const Dashboard = () => {
   const { fetchDashboardStats, stats, isLoading } = useSaleStore();

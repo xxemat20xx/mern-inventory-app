@@ -20,7 +20,7 @@ import { Loading } from '../component/Loading';
 const Terminal = () => {
   const { products, getProducts, isLoading} = useInventoryStore();
   const { checkoutSale, fetchPurchaseLogs } = useSaleStore();
-  const { user } = useAuthStore();
+  const { user, isAuthenticated, isCheckingAuth } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]); 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -29,11 +29,6 @@ const Terminal = () => {
   const barcodeInputRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-  useEffect(() => {
-    getProducts();
-    fetchPurchaseLogs();
-  }, [getProducts, fetchPurchaseLogs]);
 
 
   const filteredProducts = Array.isArray(products) 
@@ -138,6 +133,14 @@ const Terminal = () => {
       return () => clearInterval(interval);
     }, [isLoading]);
 
+    useEffect(() => {
+      if (isCheckingAuth) return;
+      if (!isAuthenticated || !user) return;
+
+      getProducts();
+      fetchPurchaseLogs();
+    }, [isAuthenticated, isCheckingAuth, user]);
+ 
   return(
      <div className="h-full flex flex-col lg:flex-row gap-6 animate-in fade-in duration-500">
       {/* Loading Screen */}

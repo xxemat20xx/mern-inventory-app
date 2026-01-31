@@ -5,7 +5,7 @@ import {
   User as UserIcon,
   ArrowRight,
 } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore';
 
 const Login = () => {
@@ -13,11 +13,17 @@ const Login = () => {
   const { login} = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('ADMIN');
+  const [role, setRole] = useState('admin');
+  const navigate = useNavigate();
 
   const handleLogin = async(e) => {
     e.preventDefault();
-    await login(email, password)
+    try {
+      await login(email, password)
+      navigate("/dashboard")
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   return (
@@ -45,12 +51,12 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setRole('ADMIN')
+                  setRole('admin')
                   setEmail('test@gmail.com')
                   setPassword('123456')
                 }}
                 className={`text-slate-50 p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                  role === 'ADMIN' 
+                  role === 'admin' 
                     ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
                     : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
                 }`}

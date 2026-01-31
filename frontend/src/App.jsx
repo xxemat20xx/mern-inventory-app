@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-
+  
   // ---------------- WAIT FOR AUTH CHECK ----------------
   if (isCheckingAuth) return <Loading progress={50} message="Checking authentication..." />;
 
