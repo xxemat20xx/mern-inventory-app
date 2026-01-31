@@ -52,6 +52,7 @@ const Navbar = ({ children }) => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const { user, logout } = useAuthStore();
+
   const navigate = useNavigate();
 
   const isAdmin = user?.role === "admin";
@@ -122,11 +123,11 @@ const Navbar = ({ children }) => {
           
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <p className="text-sm text-slate-50">{user.email}</p>
-              <p className="text-xs uppercase text-slate-300">{user.role}</p>
+              <p className="text-sm text-slate-50">{user?.email || 'user@gmail.com'}</p>
+              <p className="text-xs uppercase text-slate-300">{user?.role || 'Staff'}</p>
             </div>
             <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center">
-              {user.role === "admin" ? <ShieldCheck /> : <UserIcon />}
+              {user?.role === "admin" ? <ShieldCheck /> : <UserIcon />}
             </div>
           </div>
         </header>
