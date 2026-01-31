@@ -26,6 +26,11 @@ const __dirname = path.resolve();
 app.use(express.json()); 
 app.use(cookieParser()); 
 
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/sales', salesRoutes);
+app.use('/api/stockLogs', stockLogsRoutes);
+
 // Serve static files from the React frontend app
 if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '../frontend/dist');
@@ -37,13 +42,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(frontendPath, 'index.html'));
   });
 }
-
-
-
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/sales', salesRoutes);
-app.use('/api/stockLogs', stockLogsRoutes);
 
 app.listen(PORT, () => {
   connectDB();
