@@ -66,17 +66,7 @@ const Navbar = ({ children }) => {
 
   /* ---------------- SAFE LOGOUT ---------------- */
   const handleLogout = async () => {
-    try {
-      await logout();
-    } finally {
-      setActiveTab("");
-      setIsSidebarOpen(false);
-
-      // hard redirect guarantees clean state
-      if (typeof window !== "undefined") {
-        window.location.href = "http://localhost:5173/";
-      }
-    }
+    await logout();
   };
 
   return (
