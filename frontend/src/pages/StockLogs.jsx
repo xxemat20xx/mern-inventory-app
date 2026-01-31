@@ -27,6 +27,7 @@ const StockLogs = () => {
 
   /* ---------------- FILTER ---------------- */
   const filteredLogs = useMemo(() => {
+    if (!Array.isArray(logs)) return [];
     const query = searchQuery.toLowerCase();
     return logs.filter(log =>
       log?.productId?.name?.toLowerCase().includes(query) ||
@@ -34,6 +35,7 @@ const StockLogs = () => {
       log?.note?.toLowerCase().includes(query)
     );
   }, [logs, searchQuery]);
+
 
   /* ---------------- PAGINATION ---------------- */
   const totalPages = Math.max(1, Math.ceil(filteredLogs.length / ITEMS_PER_PAGE));
