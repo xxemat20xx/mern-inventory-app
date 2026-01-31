@@ -22,7 +22,7 @@ const App = () => {
   }, [checkAuth]);
 
   if(!isAuthenticated) return <Login />
-  if (!user) return <div>Loading...</div>;
+
 
   return (
     <Navbar>
