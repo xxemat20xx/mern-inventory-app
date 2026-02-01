@@ -1,5 +1,5 @@
 export const cookieOptions = {
   httpOnly: true,
-  secure: false, // 👈 TEMP FIX
+  secure: false, 
   sameSite: "lax",
 };

@@ -95,7 +95,8 @@ const openModal = (product = null) => {
   });
 
   return (
-     <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="min-h-screen pb-20 space-y-6 bg-slate-950 animate-in fade-in duration-500">
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="relative flex-1 w-full">
@@ -105,7 +106,7 @@ const openModal = (product = null) => {
             placeholder="Search by SKU, Name or Category..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="dark:bg-slate-900 text-slate-50 w-full pl-12 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="bg-slate-900 text-slate-50 w-full pl-12 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
           />
         </div>
 
@@ -135,13 +136,13 @@ const openModal = (product = null) => {
                 <th className="px-6 py-4 text-right text-xs font-bold uppercase text-slate-50">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-800">
               {filteredProduct.map((p) => (
-                <tr key={p._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr key={p._id} className="hover:bg-slate-800/30 transition-colors">
                   
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
+                      <div className="w-10 h-10 rounded-lg bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
                         {p.name.charAt(0)}
                       </div>
                       <div>
@@ -151,7 +152,7 @@ const openModal = (product = null) => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm text-slate-600 dark:text-slate-400">{p.category}</span>
+                    <span className="text-sm text-slate-400">{p.category}</span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-bold text-slate-50">{p.quantity}</div>
@@ -159,19 +160,19 @@ const openModal = (product = null) => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-slate-500 font-medium">Cost: ₱{p.cost.toFixed(2)}</div>
-                    <div className="text-sm font-bold text-indigo-600 dark:text-indigo-400">₱{p.price.toFixed(2)}</div>
+                    <div className="text-sm font-bold text-indigo-400">₱{p.price.toFixed(2)}</div>
                   </td>
                   <td className="px-6 py-4">
                     {p.quantity <= 0 ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 text-[10px] font-bold uppercase tracking-wider">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-900/30 text-rose-600 text-[10px] font-bold uppercase tracking-wider">
                         <AlertCircle size={10} /> Out of Stock
                       </span>
                     ) : p.quantity <= p.lowStockAlert ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 text-[10px] font-bold uppercase tracking-wider">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-900/30 text-amber-600 text-[10px] font-bold uppercase tracking-wider">
                         <AlertCircle size={10} /> Low Stock
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 text-[10px] font-bold uppercase tracking-wider">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-900/30 text-emerald-600 text-[10px] font-bold uppercase tracking-wider">
                         <PackageCheck size={10} /> Healthy
                       </span>
                     )}
@@ -180,13 +181,13 @@ const openModal = (product = null) => {
                     <div className="flex items-center justify-end gap-2">
                       <button 
                         onClick={() => openModal(p)}
-                        className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-900/20 rounded-lg transition-all"
                       >
                         <Edit3 size={18} />
                       </button>
                       <button 
                         onClick={() => handleDelete(p._id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-900/20 rounded-lg transition-all"
                       >
                         <Trash2 size={18} />
                       </button>
@@ -194,6 +195,16 @@ const openModal = (product = null) => {
                   </td>
                 </tr>
               ))}
+              {filteredProduct.length === 0 && 
+                (
+                  <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                        <h1 className='text-slate-400'>No product found, try adjusting search filter...</h1>
+                      </td>
+                     
+                  </tr>
+                )
+              }
             </tbody>
            </table>
         </div>
@@ -201,7 +212,7 @@ const openModal = (product = null) => {
         {/* -------------------------- MODAL -------------------- */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-              <div className="dark:bg-slate-900 rounded-2xl w-full max-w-2xl p-6">
+              <div className="bg-slate-900 rounded-2xl w-full max-w-2xl p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-slate-50">
                     {isEditing ? 'Edit Product' : 'Add Product'}
@@ -221,7 +232,7 @@ const openModal = (product = null) => {
                       type="text" 
                       value={formData.sku}
                       onChange={(e) => setFormData({...formData, sku: e.target.value})}
-                      className="text-slate-50 w-full px-4 py-3 rounded-xl dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                   <div>
@@ -231,15 +242,15 @@ const openModal = (product = null) => {
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
+                    <label className="block text-sm font-semibold text-slate-300 mb-1.5">Category</label>
                     <select 
                       value={formData.category}
                       onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                     >
                       <option>General</option>
                       <option>Beverages</option>
@@ -253,64 +264,64 @@ const openModal = (product = null) => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Cost Price</label>
+                      <label className="block text-sm font-semibold text-slate-300 mb-1.5">Cost Price</label>
                       <input 
                         required
                         type="number" 
                         step="0.01"
                         value={formData.cost}
                         onChange={(e) => setFormData({...formData, cost: parseFloat(e.target.value)})}
-                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sale Price</label>
+                      <label className="block text-sm font-semibold text-slate-300 mb-1.5">Sale Price</label>
                       <input 
                         required
                         type="number" 
                         step="0.01"
                         value={formData.price}
                         onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Min Alert</label>
+                      <label className="block text-sm font-semibold text-slate-300 mb-1.5">Min Alert</label>
                       <input 
                         required
                         type="number" 
                         value={formData.lowStockAlert}
                         onChange={(e) => setFormData({...formData, lowStockAlert: parseInt(e.target.value)})}
-                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Quantity</label>
+                      <label className="block text-sm font-semibold text-slate-300 mb-1.5">Quantity</label>
                       <input 
                         required
                         type="number" 
                         value={formData.quantity}
                         onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value)})}
-                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="text-slate-50 w-full px-4 py-3 rounded-xl bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex justify-end gap-3 pt-6 border-t border-slate-800">
                 <button 
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-6 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                  className="px-6 py-3 rounded-xl font-bold text-slate-400 hover:bg-slate-800 transition-all"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit"
-                  className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 dark:shadow-none transition-all"
+                  className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-none transition-all"
                 >
                   {isEditing ? 'Update Product' : 'Save Product'}
                 </button>

@@ -34,7 +34,7 @@ const NavButton = ({ item, onClick, isSidebarOpen, mobile }) => {
       onClick={onClick}
       className={`flex ${
         mobile ? "flex-col p-2" : "items-center gap-4 px-4 py-3"
-      } rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all`}
+      } rounded-lg text-slate-400 hover:bg-slate-800 transition-all`}
     >
       <Icon size={mobile ? 20 : 22} />
       {mobile ? (
@@ -47,7 +47,7 @@ const NavButton = ({ item, onClick, isSidebarOpen, mobile }) => {
 };
 
 /* ---------------- MAIN ---------------- */
-
+// ---------------- NAVBAR ----------------
 const Navbar = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -58,25 +58,27 @@ const Navbar = ({ children }) => {
   const isAdmin = user?.role === "admin";
   const items = NAV_ITEMS.filter((i) => isAdmin || !i.adminOnly);
 
-  const handleNav = (item) => {
+  // Include logout only in mobile nav
+  const mobileItems = [...items, { key: "logout", label: "Logout", icon: LogOut }];
+
+  const handleNav = async (item) => {
+    if (item.key === "logout") {
+      await logout();
+      navigate("/");
+      return;
+    }
+
     if (!item?.path) return;
+
     setActiveTab(item.key);
     navigate(item.path);
   };
 
-  /* ---------------- SAFE LOGOUT ---------------- */
-  const handleLogout = async () => {
-    await logout();
-    navigate("/")
-  };
-
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950">
-      
-      {/* ---------------- SIDEBAR ---------------- */}
-      <aside
-        className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex flex-col border-r bg-white dark:bg-slate-900 transition-all no-print`}
-      >
+    <div className="min-h-screen flex bg-slate-950 z-10">
+
+      {/* ---------------- SIDEBAR (Desktop) ---------------- */}
+      <aside className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex flex-col border-r bg-slate-900 transition-all no-print z-10`}>
         <div className="p-6 flex items-center gap-3">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
             <Package className="text-white" size={24} />
@@ -99,11 +101,12 @@ const Navbar = ({ children }) => {
           ))}
         </nav>
 
+        {/* Desktop Logout Button */}
         <div className="p-4 space-y-2">
           <button
             type="button"
-            onClick={handleLogout}
-            className="w-full flex items-center gap-4 px-4 py-3 text-rose-500 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20"
+            onClick={handleNav.bind(null, { key: "logout" })}
+            className="w-full flex items-center gap-4 px-4 py-3 text-rose-500 rounded-lg hover:bg-rose-900/20"
           >
             <LogOut />
             {isSidebarOpen && <span>Logout</span>}
@@ -112,8 +115,8 @@ const Navbar = ({ children }) => {
       </aside>
 
       {/* ---------------- MOBILE NAV ---------------- */}
-      <div className="no-print md:hidden fixed bottom-0 inset-x-0 flex justify-around bg-white dark:bg-slate-900 border-t">
-        {items.map((item) => (
+      <div className="no-print md:hidden fixed bottom-0 inset-x-0 z-50 flex justify-around bg-slate-900 border-t">
+        {mobileItems.map((item) => (
           <NavButton
             key={item.key}
             item={item}
@@ -125,7 +128,7 @@ const Navbar = ({ children }) => {
 
       {/* ---------------- MAIN ---------------- */}
       <main className="flex-1 flex flex-col">
-        <header className="no-print h-16 flex items-center justify-between px-6 border-b bg-white dark:bg-slate-900">
+        <header className="no-print h-16 flex items-center justify-between px-6 border-b bg-slate-900">
           <div className="flex items-center gap-4">
             <button
               type="button"
@@ -142,12 +145,8 @@ const Navbar = ({ children }) => {
 
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <p className="text-sm text-slate-50">
-                {user?.email || "user@gmail.com"}
-              </p>
-              <p className="text-xs uppercase text-slate-300">
-                {user?.role || "Staff"}
-              </p>
+              <p className="text-sm text-slate-50">{user?.email || "user@gmail.com"}</p>
+              <p className="text-xs uppercase text-slate-300">{user?.role || "Staff"}</p>
             </div>
             <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center">
               {user?.role === "admin" ? <ShieldCheck /> : <UserIcon />}
@@ -155,12 +154,11 @@ const Navbar = ({ children }) => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto p-4 md:p-8">{children}</div>
       </main>
     </div>
   );
 };
+
 
 export default Navbar;

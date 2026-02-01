@@ -32,7 +32,7 @@ const Login = () => {
         <div className="rounded-3xl shadow-xl p-8 bg-slate-800">
           <div className="flex justify-between items-start mb-10">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 dark:shadow-none">
+              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <Package className="text-white" size={28} />
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-slate-50">Inventory App</h1>
@@ -41,7 +41,7 @@ const Login = () => {
 
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-2 text-slate-50">Welcome Back</h2>
-            <p className="text-slate-500 dark:text-slate-500 text-sm">
+            <p className="text-slate-500 text-sm">
               Sign in to manage your inventory and sales.
             </p>
           </div>
@@ -57,8 +57,8 @@ const Login = () => {
                 }}
                 className={`text-slate-50 p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
                   role === 'admin' 
-                    ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
-                    : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
+                    ? 'border-indigo-600 bg-indigo-900/20 text-indigo-600' 
+                    : 'border-slate-800 hover:border-slate-700'
                 }`}
               >
                 <ShieldCheck size={24} />
@@ -73,8 +73,8 @@ const Login = () => {
                 }}
                 className={`text-slate-50 p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
                   role === 'STAFF' 
-                    ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
-                    : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
+                    ? 'border-indigo-600 bg-indigo-900/20 text-indigo-600' 
+                    : 'border-slate-800 hover:border-slate-700'
                 }`}
               >
                 <UserIcon size={24} />
@@ -83,7 +83,7 @@ const Login = () => {
             </div>           
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Email
                 </label>
                 <input
@@ -97,7 +97,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Password
                 </label>
                 <input
@@ -115,7 +115,7 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01] active:scale-[0.99]"
             >
               Sign In <ArrowRight size={20} />
             </button>

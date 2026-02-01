@@ -39,10 +39,10 @@ const Dashboard = () => {
   const COLORS = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
     
     const cards = [
-       { label: 'Total Profit', value: `₱${stats.totalProfit.toLocaleString()}`, icon: PhilippinePeso, color: 'text-indigo-600', bg: 'bg-indigo-100 dark:bg-indigo-900/30', trend: '+12.5%', isUp: true },
-       { label: 'Total Orders', value: stats.totalSoldItem, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-100 dark:bg-emerald-900/30', trend: '+8.2%', isUp: true },
-       { label: 'Total Revenue', value: `₱${stats.totalRevenue.toLocaleString()}`, icon: Package, color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/30', trend: '-2.4%', isUp: false },
-       { label: 'Low Stock Alert', value: lowStockItem.length, icon: AlertTriangle, color: 'text-rose-600', bg: 'bg-rose-100 dark:bg-rose-900/30', trend: 'Critical', isUp: false },
+       { label: 'Total Profit', value: `₱${stats.totalProfit.toLocaleString()}`, icon: PhilippinePeso, color: 'text-indigo-600', bg: 'bg-indigo-100 bg-indigo-900/30', trend: '+12.5%', isUp: true },
+       { label: 'Total Orders', value: stats.totalSoldItem, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-100 bg-emerald-900/30', trend: '+8.2%', isUp: true },
+       { label: 'Total Revenue', value: `₱${stats.totalRevenue.toLocaleString()}`, icon: Package, color: 'text-amber-600', bg: 'bg-amber-100 bg-amber-900/30', trend: '-2.4%', isUp: false },
+       { label: 'Low Stock Alert', value: lowStockItem.length, icon: AlertTriangle, color: 'text-rose-600', bg: 'bg-rose-100 bg-rose-900/30', trend: 'Critical', isUp: false },
     ];
   useEffect(() => {
     fetchDashboardStats()
@@ -72,7 +72,7 @@ const Dashboard = () => {
 
   
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-28 md:pb-8">
         {/* Top Cards */}
         {isLoading && (
           <Loading
@@ -82,13 +82,13 @@ const Dashboard = () => {
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map((card, idx) => (
-            <div key={idx} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+            <div key={idx} className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start mb-4">
                     <div className={`p-3 rounded-xl ${card.bg}`}>
                         <card.icon className={card.color} size={24} />
                     </div>
                       <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
-                        card.isUp ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20' : 'bg-rose-50 text-rose-600 dark:bg-rose-900/20'
+                        card.isUp ? 'text-emerald-600 bg-emerald-900/20' : ' text-rose-600 bg-rose-900/20'
                       }`}>
                         {card.isUp ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                         {card.trend}
@@ -102,10 +102,10 @@ const Dashboard = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sales Trend */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="lg:col-span-2 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
           <div className="flex justify-between items-center mb-8">
             <h3 className="font-bold text-lg text-slate-50">Revenue Trend</h3>
-            <select className="dark:bg-slate-500 border-none text-xs font-semibold rounded-lg px-3 py-1.5 focus:ring-0">
+            <select className="bg-slate-500 border-none text-xs font-semibold rounded-lg px-3 py-1.5 focus:ring-0">
               <option>Last 7 Days</option>
               <option>Last 30 Days</option>
             </select>
@@ -133,7 +133,7 @@ const Dashboard = () => {
         </div>
 
         {/* Category Distribution */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
           <h3 className="font-bold text-lg mb-8 text-slate-50">Inventory Split</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -153,13 +153,13 @@ const Dashboard = () => {
       </div>
          {/* Bottom Lists */}
       <div className="w-full">
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
           <h3 className="font-bold text-lg mb-6 text-slate-50">Restock Needed</h3>
           <div className="space-y-4">
             {lowStockItem.length > 0 ? lowStockItem.map((p) => (
-              <div key={p._id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <div key={p._id} className="flex items-center justify-between p-3 rounded-xl bg-slate-800/50">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-900/30 flex items-center justify-center text-indigo-600 font-bold">
                     {p.name.charAt(0)}
                   </div>
                   <div>
@@ -167,7 +167,7 @@ const Dashboard = () => {
                     <p className="text-xs text-slate-500">Current Stock: <span className="font-bold text-rose-500">{p.quantity}</span></p>
                   </div>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 text-[10px] font-bold uppercase">
+                <div className="px-3 py-1 rounded-full bg-rose-900/30 text-rose-600 text-[10px] font-bold uppercase">
                   Below Min: {p.quantity}
                 </div>
               </div>

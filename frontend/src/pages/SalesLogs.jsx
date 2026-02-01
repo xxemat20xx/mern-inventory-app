@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSaleStore } from "../store/useSaleStore";
-import { Printer } from "lucide-react";
+import { Printer, ChevronLeft, ChevronRight} from "lucide-react";
 import { Loading } from "../component/Loading";
 
 const ITEMS_PER_PAGE = 8;
@@ -52,7 +52,7 @@ const Sales = () => {
   };
 
   return (
-    <div className="w-full mx-auto">
+    <div className="min-h-screen w-full mx-auto bg-slate-950 pb-20">
       {isLoading && <Loading message="Loading sales..." />}
 
       {/* Header */}
@@ -80,21 +80,24 @@ const Sales = () => {
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="text-indigo-300 hover:text-indigo-600 transition-colors transform cursor-pointer"
           >
-            ◀
+            <ChevronLeft size={22}/>
           </button>
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            className="text-indigo-300 hover:text-indigo-600 transition-colors transform cursor-pointer"
           >
-            ▶
+            <ChevronRight size={22}/>
           </button>
         </div>
       </div>
 
       {/* Table */}
       <div className="no-print bg-slate-800 rounded-2xl overflow-hidden">
-        <table className="w-full">
+        <div className="overflow-x-auto">
+            <table className="min-w-[640px] w-full">
           <tbody>
             {paginatedSales.length ? (
               paginatedSales.map((sale) => (
@@ -137,6 +140,7 @@ const Sales = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* ---------------- PRINT ---------------- */}

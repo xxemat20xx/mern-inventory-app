@@ -19,7 +19,7 @@ const StockLogs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const ITEMS_PER_PAGE = 8;
+  const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
     fetchStockLogs();
@@ -47,7 +47,8 @@ const StockLogs = () => {
   }, [filteredLogs, currentPage, totalPages]);
 
   return (
-    <div className="flex flex-col overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+    <div className="flex flex-col overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm pb-20 md:pb-0">
+
 
       {/* -------------------------SEARCH QUERY ---------------------------- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mx-4 my-4">
@@ -78,8 +79,11 @@ const StockLogs = () => {
       </div>
 
       {/* ---------------------- TABLE ----------------------------------- */}
-      <div className="no-print bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/40 mx-3">
-        <table className="w-full text-left border-collapse">
+     <div className="no-print bg-slate-800 border border-slate-700 rounded-2xl overflow-x-auto shadow-2xl shadow-black/40 mx-3">
+        <p className="text-xs text-slate-500 px-4 py-2 md:hidden text-center">
+          ← Swipe horizontally to see more →
+        </p>
+        <table className="min-w-[900px] w-full text-left border-collapse">
           <thead className="bg-slate-800/80 border-b border-slate-700">
             <tr>
               <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">

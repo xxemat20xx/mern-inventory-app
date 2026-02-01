@@ -142,7 +142,7 @@ const Terminal = () => {
     }, [isAuthenticated, isCheckingAuth, user]);
  
   return(
-     <div className="h-full flex flex-col lg:flex-row gap-6 animate-in fade-in duration-500">
+     <div className="min-h-screen flex flex-col lg:flex-row gap-6 pb-24 lg:pb-0">
       {/* Loading Screen */}
         {isLoading && (
           <Loading
@@ -151,8 +151,8 @@ const Terminal = () => {
           />
         )}      
       {/* Product Selection */}
-      <div className="flex-1 flex flex-col min-h-0 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm no-print">
-          <div className="p-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex-1 flex flex-col min-h-screen bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-sm no-print">
+          <div className="p-4 border-b border-slate-800">
              <form onSubmit={handleBarcodeSubmit} className="relative">
                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                <input 
@@ -161,13 +161,13 @@ const Terminal = () => {
                placeholder="Search product or scan barcode..."
                value={searchTerm}
                onChange={(e) => setSearchTerm(e.target.value)}
-               className="w-full pl-12 pr-4 py-3 text-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-indigo-500"
+               className="w-full pl-12 pr-4 py-3 bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-50"
                />
                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => barcodeInputRef.current?.focus()}
-                      className="p-1.5 text-slate-50 bg-slate-200 dark:bg-slate-700 rounded-md"
+                      className="p-1.5 text-slate-50 bg-slate-700 rounded-md"
                     >
                      <Keyboard size={16} />  
                     </button>     
@@ -184,25 +184,25 @@ const Terminal = () => {
                         onClick={() => addToCart(product)}
                         className={`group text-left p-4 rounded-2xl border transition-all ${
                           product.quantity <= 0 
-                            ? 'opacity-50 cursor-not-allowed bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700' 
-                            : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-500/5'
+                            ? 'opacity-50 cursor-not-allowed bg-slate-800 border-slate-700' 
+                            : 'bg-slate-900 border-slate-800 hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-500/5'
                         }`}
                         >
                       <div className="relative mb-3">
                         <div className={`aspect-square rounded-xl flex items-center justify-center text-2xl font-bold ${
-                        product.quantity <= 0 ? 'bg-slate-200 text-slate-400' : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                        product.quantity <= 0 ? 'bg-slate-200 text-slate-400' : 'bg-indigo-900/30 text-indigo-300'
                       }`}>
                            {product.name.charAt(0) + product.name.charAt(1)}
                         </div>
                         {product.quantity <= product.lowStockAlert && product.quantity > 0 && (
-                          <div className="absolute top-1 right-1 w-3 h-3 bg-amber-500 rounded-full border-2 border-white dark:border-slate-900"></div>
+                          <div className="absolute top-1 right-1 w-3 h-3 bg-amber-500 rounded-full border-2 border-slate-900"></div>
                         )}
                       </div>
                       <h4 className='text-3xl text-slate-50'>{product.name}</h4>
                         <div className="flex items-center justify-between">
-                          <span className="text-indigo-600 dark:text-indigo-400 font-bold text-sm">₱ {product.price.toFixed(2)}</span>
+                          <span className="text-indigo-400 font-bold text-sm">₱ {product.price.toFixed(2)}</span>
                             <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${
-                              product.quantity<= 0 ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                              product.quantity<= 0 ? 'bg-rose-100 text-rose-600' : 'bg-slate-800 text-slate-500'
                             }`}>
                               STK: {product.quantity} 
                             </span>                          
@@ -220,13 +220,13 @@ const Terminal = () => {
           </div>
       </div>
       {/* -------------------- CART ITEMS ------------------  */}
-      <div className="w-full lg:w-96 flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm no-print">
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="w-full lg:w-96 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-sm no-print">
+        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
            <h3 className='text-bold text-xl text-slate-50'>Current Order</h3>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
              {cart.map((item) => (
-              <div key={item.product?._id} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <div key={item.product?._id} className="flex items-start gap-3 p-3 rounded-xl bg-slate-800/50">
                   <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-sm truncate text-slate-50">{item.product?.name}</h4>
                       <p className="text-xs text-slate-500 mb-2">₱{item?.product?.price.toFixed(2)} each</p>
@@ -234,14 +234,14 @@ const Terminal = () => {
                       <div className="flex items-center gap-2">
                           <button 
                             onClick={() => updateQty(item.product.id, -1)}
-                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 border border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
                           >
                             <Minus size={14} />
                           </button>
                           <span className='text-center font-bold text-sm mx-2 text-slate-50'>{item.quantity}</span>
                           <button 
                             onClick={() => updateQty(item.product.id, 1)}
-                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 border border-slate-600 text-slate-500 hover:text-indigo-600 transition-colors"
                           >
                             <Plus size={14} />
                           </button>
@@ -265,7 +265,7 @@ const Terminal = () => {
              )}
         </div>
         {/* ------------------ subtotal ------------------- */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 space-y-2">
+        <div className="p-4 bg-slate-800/80 border-t border-slate-700 space-y-2">
              <div className="flex justify-between text-sm text-slate-500">
                 <span>Subtotal</span>
                 <span>₱{subtotal.toFixed(2)}</span>
@@ -282,7 +282,7 @@ const Terminal = () => {
           <button 
             onClick={handleCheckOut}
             disabled={cart.length === 0 || isProcessing}
-            className="w-full mt-4 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-200 dark:shadow-none"
+            className="w-full mt-4 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-none"
           >
             {isProcessing ? (
                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -298,9 +298,9 @@ const Terminal = () => {
       {/* -------------- Receipt Modal --------------------- */}
       {showReceipt && lastSale && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 no-print">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in duration-300">
-               <div className="p-6 text-center border-b border-slate-100 dark:border-slate-800">
-                   <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-slate-900 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in duration-300">
+               <div className="p-6 text-center border-b border-slate-800">
+                   <div className="w-16 h-16 bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle2 size={32} />
                     </div>
                     <h3 className="text-xl font-bold text-slate-50">Sale Successful!</h3>
@@ -310,14 +310,14 @@ const Terminal = () => {
                 <div className="p-6 space-y-4">
                     <button 
                     onClick={printReceipt}
-                    className="w-full py-3 bg-slate-900 dark:bg-slate-100 dark:text-slate-900 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all"
+                    className="w-full py-3 bg-slate-100 text-slate-900 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all"
                     >
                       <Printer size={20} />
                       Print Receipt                   
                     </button>
                     <button
                       onClick={() => setShowReceipt(false)}
-                      className="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                      className="w-full py-3 bg-slate-800 text-slate-400 rounded-xl font-bold hover:bg-slate-700 transition-all"
                     >
                       Close
                     </button>
