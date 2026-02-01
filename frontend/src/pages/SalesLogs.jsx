@@ -3,7 +3,7 @@ import { useSaleStore } from "../store/useSaleStore";
 import { Printer, ChevronLeft, ChevronRight} from "lucide-react";
 import { Loading } from "../component/Loading";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 10;
 
 const statusStyles = {
   completed: "border-green-500 text-green-400",

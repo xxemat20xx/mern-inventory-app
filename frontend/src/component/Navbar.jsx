@@ -46,7 +46,6 @@ const NavButton = ({ item, onClick, isSidebarOpen, mobile }) => {
   );
 };
 
-/* ---------------- MAIN ---------------- */
 // ---------------- NAVBAR ----------------
 const Navbar = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
