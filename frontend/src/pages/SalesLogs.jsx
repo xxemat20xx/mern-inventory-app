@@ -98,7 +98,17 @@ const Sales = () => {
       <div className="no-print bg-slate-800 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
             <table className="min-w-[640px] w-full">
-          <tbody>
+            <thead className="text-left">
+              <tr className="bg-slate-900/50 border-b border-slate-700">
+                <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Receipt No#</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Cashier</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Method</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Status</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
             {paginatedSales.length ? (
               paginatedSales.map((sale) => (
                 <tr key={sale?._id} className="border-b border-slate-700">
