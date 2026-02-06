@@ -110,7 +110,7 @@ const Terminal = () => {
   const receiptSubtotal = lastSale?.items?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
   const receiptTax = +(receiptSubtotal * 0.1).toFixed(2);
   const receiptTotal = +(receiptSubtotal + receiptTax).toFixed(2);
-
+  console.log(receiptTax)
 
 
      // Loader helper
@@ -330,7 +330,7 @@ const Terminal = () => {
         <div className="print-only hidden font-mono text-[10pt] w-[80mm] mx-auto p-4 border border-dashed border-slate-300">
             <div className="text-center mb-6">
               <h1 className="text-xl font-bold">INVENTORY APP</h1>
-              <p>123 Digital Ave, Planet Namik</p>
+              <p>123 Digital Ave, Planet Namek</p>
               <p>TEL: (555) 123-4567</p>
               <div className="border-b border-black my-2"></div>
               <p>ORDER: #{lastSale.receiptNo.toUpperCase()}</p>

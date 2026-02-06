@@ -31,6 +31,7 @@ const Sales = () => {
       sale?.cashierName?.toLowerCase().includes(term)
     );
   }, [sales, searchTerm]);
+  console.log(sales)
 
   /* ---------------- Pagination ---------------- */
   const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
@@ -175,18 +176,22 @@ const Sales = () => {
                   {Number(
                     (item?.price || 0) * (item?.quantity || 0)
                   ).toFixed(2)}
-                </span>
+                </span>               
               </div>
             ))}
           </div>
 
-          <div className="border-t mt-4 pt-2">
-            <strong>
-              TOTAL: ₱
-              {Number(selectedSale?.totalAmount || 0).toFixed(2)}
-            </strong>
-          </div>
 
+            <div className="flex justify-between">
+              <span>TAX 12%</span>
+              <span>
+               ₱{Number(selectedSale?.tax || 0).toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between flex-col">
+              <div>-----------------------------------</div>
+              <span className="text-right"><strong>TOTAL ₱{Number(selectedSale?.totalAmount || 0).toFixed(2)}</strong></span>
+            </div>
           <p className="text-center mt-4">THANK YOU FOR SHOPPING!</p>
         </div>
       )}

@@ -38,6 +38,10 @@ const saleSchema = new mongoose.Schema({
         type: String,
         enum: ['completed', 'refunded'],
         default: 'completed'
+    },
+    tax:{
+        type: Number,
+        required: true
     }
 },
 { timestamps: true });

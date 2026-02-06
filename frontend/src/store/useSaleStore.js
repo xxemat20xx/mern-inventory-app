@@ -37,28 +37,23 @@ fetchDashboardStats: async () => {
 },
 
 
-
-checkoutSale: async ({ cart, paymentMethod = "cash", cashierName}) => {
+checkoutSale: async ({ cart, paymentMethod = "cash", cashierName }) => {
   set({ isLoading: true, error: null });
 
-  const payload = {
-    items: cart.map(item => ({
-      productId: item.product._id,
-      quantity: item.quantity
-    })),
-    paymentMethod,
-    cashierName
-  };
-
   try {
-    const res = await api.post("/sales/createSale", payload);
+    const res = await api.post("/sales/createSale", {
+      items: cart.map(item => ({
+        productId: item.product._id,
+        quantity: item.quantity
+      })),
+      paymentMethod,
+      cashierName
+    });
 
     set({
       lastSale: res.data,
-      isLoading: false,
-      items: Array.isArray(res.data.items) ? res.data.items : []
+      isLoading: false
     });
-
 
     return res.data;
   } catch (err) {
@@ -69,6 +64,7 @@ checkoutSale: async ({ cart, paymentMethod = "cash", cashierName}) => {
     throw err;
   }
 },
+
 fetchPurchaseLogs: async () => {
   set({ isLoading: true, error: null });
   try {

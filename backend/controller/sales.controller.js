@@ -15,9 +15,10 @@ export const createSale = async (req, res) => {
       return res.status(400).json({ message: "Items array is required" });
     }
 
-    let totalAmount = 0;
+    let subtotal = 0;
     const saleItems = [];
     const receiptNo = `TRX-${Date.now()}`;
+    const TAX_RATE = 0.12; //ph VAT
 
     for (const item of items) {
       const product = await Product.findById(item.productId).session(session);
@@ -29,15 +30,15 @@ export const createSale = async (req, res) => {
       product.quantity -= item.quantity;
       await product.save({ session });
 
-      const subtotal = item.quantity * product.price;
-      totalAmount += subtotal;
+      const itemSubtotal = item.quantity * product.price;
+      subtotal += itemSubtotal;
 
       saleItems.push({
         productId: product._id,
         name: product.name,
         quantity: item.quantity,
         price: product.price,
-        subtotal
+        subtotal: itemSubtotal
       });
 
       await StockLog.create([{
@@ -49,13 +50,18 @@ export const createSale = async (req, res) => {
       }], { session });
     }
 
+    const tax = subtotal * TAX_RATE;
+    const totalAmount = subtotal + tax;
+
     const sale = await Sale.create([{
       receiptNo,
       items: saleItems,
       paymentMethod,
+      subtotal,
+      tax,
       totalAmount,
       cashierName,
-      cashierId: req.user.userId || null,
+      cashierId: req.user.userId || null
     }], { session });
 
     await session.commitTransaction();
@@ -66,11 +72,10 @@ export const createSale = async (req, res) => {
   } catch (err) {
     await session.abortTransaction();
     session.endSession();
-
-    console.error(err);
     res.status(400).json({ message: err.message });
   }
 };
+
 export const getStats = async (req, res) => {
   try {
     const sales = await Sale.find({ status: "completed" });
